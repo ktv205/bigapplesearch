@@ -7,7 +7,7 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.widget.SearchView" />
     <item android:id="@+id/action_right_nav"
-        android:icon="@drawable/ic_navigation_drawer"
+        android:icon="@drawable/ic_action_filter_100"
         app:showAsAction="always"
         android:title="@string/app_name"></item>
 </menu>

@@ -13,17 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.krishnateja.bigapplesearch.R;
-import com.example.krishnateja.bigapplesearch.data.RecentSearchContentProvider;
+import com.example.krishnateja.bigapplesearch.utils.RecentSearchContentProvider;
 import com.example.krishnateja.bigapplesearch.fragment.LeftDrawerFragment;
 import com.example.krishnateja.bigapplesearch.fragment.RightDrawerFragment;
 
@@ -59,6 +56,9 @@ public class MainActivity extends ActionBarActivity {
         mLeftDrawerFragment = (LeftDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.main_left_drawer_fragment);
         mRightDrawerFragment = (RightDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.main_right_drawer_fragment);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        mLeftDrawerFragment.getDrawerLayout(drawerLayout);
+        mRightDrawerFragment.getDrawerLayout(drawerLayout);
+
         setUp(drawerLayout, mToolbar);
 
 

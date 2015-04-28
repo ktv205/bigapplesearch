@@ -1,4 +1,4 @@
-package com.example.krishnateja.bigapplesearch.data;
+package com.example.krishnateja.bigapplesearch.utils.rightdrawerutils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,30 +11,30 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Created by krishnateja on 4/18/2015. source: https://gist.github.com/lapastillaroja/858caf1a82791b6c1a36
+ * Created by krishnateja on 4/28/2015.
  */
-public class LeftDrawerItemDecoration extends RecyclerView.ItemDecoration {
+public class RightDrawerItemDecorator extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
     private boolean mShowFirstDivider = false;
     private boolean mShowLastDivider = false;
-    public LeftDrawerItemDecoration(Context context, AttributeSet attrs) {
+    public RightDrawerItemDecorator(Context context, AttributeSet attrs) {
         final TypedArray a = context
                 .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
         mDivider = a.getDrawable(0);
         a.recycle();
     }
 
-    public LeftDrawerItemDecoration(Context context, AttributeSet attrs, boolean showFirstDivider,
+    public RightDrawerItemDecorator(Context context, AttributeSet attrs, boolean showFirstDivider,
                                     boolean showLastDivider) {
         this(context, attrs);
         mShowFirstDivider = showFirstDivider;
         mShowLastDivider = showLastDivider;
     }
-    public LeftDrawerItemDecoration(Drawable divider) {
+    public RightDrawerItemDecorator(Drawable divider) {
         mDivider = divider;
     }
 
-    public LeftDrawerItemDecoration(Drawable divider, boolean showFirstDivider,
+    public RightDrawerItemDecorator(Drawable divider, boolean showFirstDivider,
                                     boolean showLastDivider) {
         this(divider);
         mShowFirstDivider = showFirstDivider;

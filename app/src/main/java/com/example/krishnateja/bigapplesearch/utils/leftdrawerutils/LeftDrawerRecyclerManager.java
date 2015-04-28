@@ -1,4 +1,4 @@
-package com.example.krishnateja.bigapplesearch.data;
+package com.example.krishnateja.bigapplesearch.utils.leftdrawerutils;
 
 import android.support.v7.widget.RecyclerView;
 

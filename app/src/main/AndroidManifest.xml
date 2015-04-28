@@ -19,8 +19,8 @@
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
-        <provider android:name="com.example.krishnateja.bigapplesearch.data.RecentSearchContentProvider"
-            android:authorities="com.example.krishnateja.bigapplesearch.data.RecentSearchContentProvider" />
+        <provider android:name="com.example.krishnateja.bigapplesearch.utils.RecentSearchContentProvider"
+            android:authorities="com.example.krishnateja.bigapplesearch.utils.RecentSearchContentProvider" />
     </application>
 
 </manifest>
