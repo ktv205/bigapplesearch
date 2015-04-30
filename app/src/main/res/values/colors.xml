@@ -6,5 +6,6 @@
     <color name="colorAccent">#ffd700</color>
     <color name="selectColor">#efefef</color>
     <color name="white">#FFFFFF</color>
+    <color name="linkColor">#0000EE</color>
 
 </resources>
