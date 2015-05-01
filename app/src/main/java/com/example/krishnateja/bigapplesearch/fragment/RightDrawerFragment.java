@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
@@ -28,7 +26,6 @@ public class RightDrawerFragment extends Fragment {
 
     private View mView;
     private DrawerLayout mDrawerLayout;
-    private RecyclerView mRecyclerView;
     private RightDrawerRecyclerAdapter mRightDrawerRecyclerAdapter;
 
     @Override
@@ -46,23 +43,23 @@ public class RightDrawerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Button button = (Button) mView.findViewById(R.id.fragment_right_drawer_done_button);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_right_drawer_recycle_view);
-        mRecyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.fragment_right_drawer_recycle_view);
+        recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.addItemDecoration(new RightDrawerItemDecorator(getActivity(), null));
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new RightDrawerItemDecorator(getActivity(), null));
+        recyclerView.setLayoutManager(layoutManager);
         mRightDrawerRecyclerAdapter = new RightDrawerRecyclerAdapter(getActivity(),
                 loadNearByTextData(), loadNearBySpinnerData(), button, mDrawerLayout);
-        mRecyclerView.setAdapter(mRightDrawerRecyclerAdapter);
+        recyclerView.setAdapter(mRightDrawerRecyclerAdapter);
     }
 
     public ArrayList<String> loadNearByTextData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add("Show");
-        data.add("Distance");
-        data.add("Rating");
-        data.add("Cuisine");
-        data.add("price");
+        data.add(AppConstants.InAppConstants.SHOW_TEXT);
+        data.add(AppConstants.InAppConstants.DISTANCE_TEXT);
+        data.add(AppConstants.InAppConstants.RATING_TEXT);
+        data.add(AppConstants.InAppConstants.CUISINE_TEXT);
+        data.add(AppConstants.InAppConstants.PRICE_TEXT);
         return data;
     }
 
@@ -88,8 +85,7 @@ public class RightDrawerFragment extends Fragment {
             mRightDrawerRecyclerAdapter.changeDataSet(loadCitiAndMTASpinnerData(), loadCitiAndMTATextData());
 
         } else {
-
-
+             //restaurants stuff
         }
     }
 
@@ -101,7 +97,7 @@ public class RightDrawerFragment extends Fragment {
 
     public ArrayList<String> loadCitiAndMTATextData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add("Distance");
+        data.add(AppConstants.InAppConstants.DISTANCE_TEXT);
         return data;
     }
 

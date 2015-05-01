@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MainActivity extends ActionBarActivity implements RightDrawerRecyclerAdapter.Filters,
@@ -47,7 +48,6 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     private RightDrawerFragment mRightDrawerFragment;
     private MainFragment mMainFragment;
     private Toolbar mToolbar;
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Context mApplicationContext;
     private Activity mActivityContext;
@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     private static final int START_FLAG = 1;
     private static final int END_FLAG = 2;
     private GoogleApiClient mGoogleApiClient;
-    private int mSelection = -1;
+    private int mSelection = 0;
     private int mFlag = 0;
     private static final int DONE = 2;
     private ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
@@ -116,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     public void setUp(final DrawerLayout drawerLayout, Toolbar toolbar) {
         mDrawerLayout = drawerLayout;
         mToolbar = toolbar;
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(mActivityContext, drawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(mActivityContext, drawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -135,8 +135,8 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         };
 
 
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
-        mActionBarDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
     public void openOrClose(int flag) {
@@ -155,10 +155,7 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         }
     }
 
-    @Override
-    public void getFilters(int[] filters) {
-        mMainFragment.changeDataSet(filters);
-    }
+
 
     @Override
     public void getMenuSelection(int selection) {
@@ -181,15 +178,16 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         double lng=location.getLongitude();
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
 
-             callMTAAsyncTask(lat,lng);
+             callMTAAsyncTask(lat, lng);
              callCITIAsyncTask(lat,lng);
         } else if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
-             callMTAAsyncTask(lat,lng,0);
+             callMTAAsyncTask(lat, lng, 0);
         } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT) {
              callCITIAsyncTask(lat,lng,0);
         } else {
-
+             //call restaurants later
         }
+        mGoogleApiClient.disconnect();
 
 
     }
@@ -265,5 +263,11 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
         }
 
+    }
+
+    @Override
+    public void getFilters(HashMap<Integer, Integer> filters) {
+
+            mMainFragment.changeDataSet(filters);
     }
 }

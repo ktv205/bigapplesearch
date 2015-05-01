@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList;
     private int mMTASize;
     private int mCitiSize;
+    private int mMoreSize=0;
 
     public MainRecyclerAdapter(Context context, ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
                                ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
@@ -47,12 +49,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_list, viewGroup, false));
+        if(i==AppConstants.InAppConstants.MORE_CODE){
+            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_load_more,viewGroup,false));
+        }else {
+            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_list, viewGroup, false));
+        }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        if (getItemViewType(i) == AppConstants.InAppConstants.MTA_CODE) {
+        int type=getItemViewType(i);
+        if (type == AppConstants.InAppConstants.MTA_CODE) {
             MTAMainScreenModel mtaMainScreenModel = mMTAMainScreenModelArrayList.get(i);
             viewHolder.headingTextView.setText(AppConstants.InAppConstants.MTA);
             viewHolder.nameTextView.setText(mtaMainScreenModel.getStopName());
@@ -76,7 +83,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.directionsTextView.setTag(mtaMainScreenModel.getStopLatitude() + "," + mtaMainScreenModel.getStopLongitude());
 
 
-        } else {
+        } else if(type==AppConstants.InAppConstants.CITI_CODE) {
             CitiBikeMainScreenModel citiBikeMainScreenModel = mCitiBikeMainScreenModelArrayList.get(i - mMTASize);
             viewHolder.titleLinearLayout.setBackgroundColor(mContext.getResources().getColor(R.color.citiColor));
             viewHolder.headingTextView.setText(AppConstants.InAppConstants.CITI);
@@ -88,16 +95,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.linesCuisineTextView.setText(citiBikeMainScreenModel.getStatusValue() +
                     " " + citiBikeMainScreenModel.getAvailableBikes() + " bikes available");
             viewHolder.directionsTextView.setTag(citiBikeMainScreenModel.getLatitude() + "," + citiBikeMainScreenModel.getLongitude());
-        }
+        }else if(type==AppConstants.InAppConstants.MORE_CODE){
+            viewHolder.loadMoreLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "clicked on load more");
+                }
+            });
 
-        viewHolder.phoneTextView.setOnClickListener(this);
-        viewHolder.websiteTextView.setOnClickListener(this);
-        viewHolder.directionsTextView.setOnClickListener(this);
+        }
+        if(type!=AppConstants.InAppConstants.MORE_CODE) {
+            viewHolder.phoneTextView.setOnClickListener(this);
+            viewHolder.websiteTextView.setOnClickListener(this);
+            viewHolder.directionsTextView.setOnClickListener(this);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mMTASize + mCitiSize;
+        return mMTASize + mCitiSize+mMoreSize;
     }
 
     @Override
@@ -145,6 +161,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         TextView headingTextView, nameTextView,
                 linesCuisineTextView, distanceTextView, directionsTextView, priceTextView, websiteTextView, phoneTextView;
         RatingBar ratingBar;
+        LinearLayout loadMoreLinearLayout;
 
 
         public ViewHolder(View itemView) {
@@ -160,6 +177,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             phoneTextView = (TextView) itemView.findViewById(R.id.item_main_list_card_phone_text);
             priceTextView = (TextView) itemView.findViewById(R.id.item_main_list_card_price_text);
             ratingBar = (RatingBar) itemView.findViewById(R.id.item_main_list_card_rating);
+            loadMoreLinearLayout=(LinearLayout)itemView.findViewById(R.id.item_main_load_more_linearlayout);
 
 
         }
@@ -169,17 +187,27 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getItemViewType(int position) {
         if (position < mMTASize) {
             return AppConstants.InAppConstants.MTA_CODE;
-        } else {
+        } else if(mCitiBikeMainScreenModelArrayList.size()!=0) {
             return AppConstants.InAppConstants.CITI_CODE;
+        }else if(mMoreSize==1){
+            return AppConstants.InAppConstants.MORE_CODE;
+        }else{
+            return -1;
         }
 
     }
 
-    public void changeDataSet(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList){
-          mMTAMainScreenModelArrayList=mtaMainScreenModelArrayList;
+    public void changeDataSet(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
+                              ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList,boolean mtaMore){
+        mMTAMainScreenModelArrayList=mtaMainScreenModelArrayList;
         mCitiBikeMainScreenModelArrayList=citiBikeMainScreenModelArrayList;
         mMTASize=mMTAMainScreenModelArrayList.size();
         mCitiSize=mCitiBikeMainScreenModelArrayList.size();
+        if(mtaMore){
+          mMoreSize=1;
+        }else{
+            mMoreSize=0;
+        }
         notifyDataSetChanged();
 
     }

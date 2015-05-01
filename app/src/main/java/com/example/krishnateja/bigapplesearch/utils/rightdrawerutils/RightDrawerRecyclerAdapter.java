@@ -20,6 +20,7 @@ import com.example.krishnateja.bigapplesearch.models.AppConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by krishnateja on 4/28/2015.
@@ -30,11 +31,11 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
     private ArrayList<Integer> mSpinnerData;
     private int mDataSize = 0;
     private static final String TAG = RightDrawerRecyclerAdapter.class.getSimpleName();
-    private int[] mFilterList;
-    private int[] mSendingList;
+    private HashMap<Integer, Integer> mFilterList;
+    private HashMap<Integer, Integer> mSendingList;
 
     public interface Filters {
-        public void getFilters(int[] filters);
+        public void getFilters(HashMap<Integer, Integer> filters);
     }
 
     private Filters mFilters;
@@ -57,14 +58,17 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
         mTextData = textData;
         mSpinnerData = spinnerData;
         mDataSize = mTextData.size();
+        mFilterList = new HashMap<>();
+        mSendingList = new HashMap<>();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean changed = changed();
+                mSendingList.clear();
+                mSendingList.putAll(mFilterList);
 
-                mSendingList = Arrays.copyOf(mFilterList, mFilterList.length);
-                ;
                 if (changed) {
+                    Log.d(TAG, "changed");
                     mFilters.getFilters(mSendingList);
                 }
                 drawerLayout.closeDrawer(GravityCompat.END);
@@ -74,12 +78,6 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
             mFilters = (Filters) mContext;
         } catch (ClassCastException e) {
             throw new ClassCastException(mContext.toString() + " must implement Filters");
-        }
-        mFilterList = new int[mDataSize];
-        mSendingList = new int[mDataSize];
-        for (int i = 0; i < mFilterList.length; i++) {
-            mFilterList[i] = 0;
-            mSendingList[i] = 0;
         }
     }
 
@@ -101,10 +99,19 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int positionInsideSpinner = viewHolder.spinner.getSelectedItemPosition();
-                mFilterList[pos] = positionInsideSpinner;
-                if (pos == AppConstants.InAppConstants.SHOW) {
-
+                String text = viewHolder.textView.getText().toString();
+                if (text.equals(AppConstants.InAppConstants.SHOW_TEXT)) {
+                    mFilterList.put(AppConstants.InAppConstants.SHOW, positionInsideSpinner);
+                } else if (text.equals(AppConstants.InAppConstants.CUISINE_TEXT)) {
+                    mFilterList.put(AppConstants.InAppConstants.CUISINE, positionInsideSpinner);
+                } else if (text.equals(AppConstants.InAppConstants.DISTANCE_TEXT)) {
+                    mFilterList.put(AppConstants.InAppConstants.DISTANCE, positionInsideSpinner);
+                } else if (text.equals(AppConstants.InAppConstants.PRICE_TEXT)) {
+                    mFilterList.put(AppConstants.InAppConstants.PRICE, positionInsideSpinner);
+                } else {
+                    mFilterList.put(AppConstants.InAppConstants.RATING, positionInsideSpinner);
                 }
+
 
             }
 
@@ -122,13 +129,7 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
     }
 
     public boolean changed() {
-        boolean changed = false;
-        for (int i = 0; i < mDataSize; i++) {
-            if (mFilterList[i] != mSendingList[i]) {
-                changed = true;
-            }
-        }
-        return changed;
+        return !mFilterList.equals(mSendingList);
     }
 
     public void changeDataSet(ArrayList<Integer> integerData, ArrayList<String> stringData) {
@@ -136,5 +137,7 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
         mSpinnerData = integerData;
         mDataSize = mTextData.size();
         notifyDataSetChanged();
+        mFilterList.clear();
+        mSendingList.clear();
     }
 }

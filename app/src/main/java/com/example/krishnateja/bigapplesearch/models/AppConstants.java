@@ -14,7 +14,7 @@ public class AppConstants {
         public static final String GETCITIVARIABLE = "citi";
         public static final String LAT = "lat";
         public static final String LNG = "lng";
-        public static final String OFFSET="offset";
+        public static final String OFFSET = "offset";
     }
 
     public static class IntentExtras {
@@ -54,15 +54,21 @@ public class AppConstants {
         public static final int PRICE_2 = 2;
         public static final int PRICE_3 = 3;
         public static final int PRICE_4 = 4;
-        public static final int SHOW=0;
-        public static final int DISTANCE=1;
-        public static final int RATING=2;
-        public static final int CUISINE=3;
-        public static final int PRICE=4;
-        public static final int NEARBY_LEFT=0;
-        public static final int MTA_LEFT=2;
-        public static final int CITI_LEFT=3;
-        public static final int RESTAURANTS_LEFT=5;
+        public static final int SHOW = 0;
+        public static final int DISTANCE = 1;
+        public static final int RATING = 2;
+        public static final int CUISINE = 3;
+        public static final int PRICE = 4;
+        public static final int NEARBY_LEFT = 0;
+        public static final int MTA_LEFT = 2;
+        public static final int CITI_LEFT = 3;
+        public static final int RESTAURANTS_LEFT = 5;
+        public static final int MORE_CODE = 3;
+        public static final String DISTANCE_TEXT = "Distance";
+        public static final String SHOW_TEXT = "show";
+        public static final String RATING_TEXT = "Rating";
+        public static final String PRICE_TEXT = "Price";
+        public static final String CUISINE_TEXT = "Cuisine";
 
 
     }

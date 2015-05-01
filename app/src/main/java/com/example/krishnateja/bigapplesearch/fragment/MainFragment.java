@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
@@ -67,52 +67,56 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-                Toast.makeText(getActivity(), "onTouchEvent", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "onTouchEvent", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
-    public void changeDataSet(int[] filters) {
+    public void changeDataSet(HashMap<Integer, Integer> filters) {
+        Log.d(TAG, "changeDataSet");
         ArrayList<MTAMainScreenModel> localMTAMainScreenModelArrayList = new ArrayList<>();
         localMTAMainScreenModelArrayList.addAll(mMtaMainScreenModelArrayList);
         ArrayList<CitiBikeMainScreenModel> localCitiBikeMainScreenModelArrayList = new ArrayList<>();
         localCitiBikeMainScreenModelArrayList.addAll(mCitiBikeMainScreenModelArrayList);
-        if (filters[AppConstants.InAppConstants.SHOW] == AppConstants.InAppConstants.SHOW_ALL) {
-            if (filters[AppConstants.InAppConstants.DISTANCE] == AppConstants.InAppConstants.DISTANCE_DECREASING) {
-                Collections.reverse(localMTAMainScreenModelArrayList);
-                Collections.reverse(localCitiBikeMainScreenModelArrayList);
-            }
-        } else if (filters[AppConstants.InAppConstants.SHOW] == AppConstants.InAppConstants.SHOW_MTA) {
-            localCitiBikeMainScreenModelArrayList.clear();
-            if (filters[AppConstants.InAppConstants.DISTANCE] == AppConstants.InAppConstants.DISTANCE_DECREASING) {
-                Collections.reverse(localMTAMainScreenModelArrayList);
-            }
-        } else if (filters[AppConstants.InAppConstants.SHOW] == AppConstants.InAppConstants.SHOW_CITI) {
-            localMTAMainScreenModelArrayList.clear();
-            if (filters[AppConstants.InAppConstants.DISTANCE] == AppConstants.InAppConstants.DISTANCE_DECREASING) {
-                Collections.reverse(localCitiBikeMainScreenModelArrayList);
-            }
-        } else {
 
+        if (filters.containsKey(AppConstants.InAppConstants.SHOW)) {
+            int value = filters.get(AppConstants.InAppConstants.SHOW);
+            if (value == AppConstants.InAppConstants.SHOW_CITI) {
+                localMTAMainScreenModelArrayList.clear();
+            } else if (value == AppConstants.InAppConstants.SHOW_MTA) {
+                localCitiBikeMainScreenModelArrayList.clear();
+            } else if (value == AppConstants.InAppConstants.SHOW_RES) {
+
+            }
         }
-        mMainRecyclerAdapter.changeDataSet(localMTAMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList);
+        if (filters.containsKey(AppConstants.InAppConstants.DISTANCE)) {
+            int value = filters.get(AppConstants.InAppConstants.DISTANCE);
+            if (value == AppConstants.InAppConstants.DISTANCE_DECREASING) {
+                Collections.reverse(localMTAMainScreenModelArrayList);
+                Collections.reverse(localCitiBikeMainScreenModelArrayList);
+            }
+        }
+        mMainRecyclerAdapter.changeDataSet(localMTAMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList, false);
     }
 
     public void dataFromMain(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
                              ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
-        Log.d(TAG, "in data from main");
+
+        boolean mtaMore = false;
         if (mtaMainScreenModelArrayList != null) {
             mMtaMainScreenModelArrayList = mtaMainScreenModelArrayList;
+            mtaMore = true;
         } else {
             mMtaMainScreenModelArrayList.clear();
         }
         if (citiBikeMainScreenModelArrayList != null) {
             mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
+            mtaMore = false;
         } else {
             mCitiBikeMainScreenModelArrayList.clear();
         }
-        mMainRecyclerAdapter.changeDataSet(mMtaMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
+        mMainRecyclerAdapter.changeDataSet(mMtaMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList, mtaMore);
     }
 
     @Override

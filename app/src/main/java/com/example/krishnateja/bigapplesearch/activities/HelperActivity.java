@@ -123,6 +123,7 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMTAMainScreenModelArrayList);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mCITIBikeMainScreenModelArrayList);
         startActivity(intent);
+        finish();
 
     }
 
