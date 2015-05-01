@@ -9,7 +9,12 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +28,7 @@ import android.widget.SearchView;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.fragment.MainFragment;
+import com.example.krishnateja.bigapplesearch.fragment.MapViewFragment;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
@@ -60,6 +66,8 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     private static final int DONE = 2;
     private ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
     private ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
 
 
     @Override
@@ -82,8 +90,11 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mLeftDrawerFragment.getDrawerLayout(drawerLayout);
         mRightDrawerFragment.getDrawerLayout(drawerLayout);
-        mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_container_fragment);
+        // mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_container_fragment);
         setUp(drawerLayout, mToolbar);
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
 
 
     }
@@ -156,7 +167,6 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     }
 
 
-
     @Override
     public void getMenuSelection(int selection) {
         mSelection = selection;
@@ -174,18 +184,18 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         mMainFragment.mSwipeRefreshLayout.setRefreshing(true);
         Location location = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
-        double lat=location.getLatitude();
-        double lng=location.getLongitude();
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
 
-             callMTAAsyncTask(lat, lng);
-             callCITIAsyncTask(lat,lng);
+            callMTAAsyncTask(lat, lng);
+            callCITIAsyncTask(lat, lng);
         } else if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
-             callMTAAsyncTask(lat, lng, 0);
+            callMTAAsyncTask(lat, lng, 0);
         } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT) {
-             callCITIAsyncTask(lat,lng,0);
+            callCITIAsyncTask(lat, lng, 0);
         } else {
-             //call restaurants later
+            //call restaurants later
         }
         mGoogleApiClient.disconnect();
 
@@ -230,16 +240,16 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     @Override
     public void getMTAData(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList) {
 
-        mMTAMainScreenModelArrayList=mtaMainScreenModelArrayList;
+        mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
         mFlag++;
         if (mSelection != AppConstants.InAppConstants.NEARBY_LEFT) {
             mFlag = 0;
-            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,null);
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList, null);
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
             mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
-        } else if (mSelection!=AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
+        } else if (mSelection != AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
             mFlag = 0;
-            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,mCitiBikeMainScreenModelArrayList);
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
             mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
         }
@@ -248,18 +258,18 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
 
     @Override
     public void getCITIData(ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
-        mCitiBikeMainScreenModelArrayList=citiBikeMainScreenModelArrayList;
+        mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
         mFlag++;
         if (mSelection != AppConstants.InAppConstants.NEARBY_LEFT) {
             mFlag = 0;
             mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
-            mMainFragment.dataFromMain(null,mCitiBikeMainScreenModelArrayList);
+            mMainFragment.dataFromMain(null, mCitiBikeMainScreenModelArrayList);
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
 
-        } else if (mSelection!=AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
+        } else if (mSelection != AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
             mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
             mFlag = 0;
-            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,mCitiBikeMainScreenModelArrayList);
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
         }
 
@@ -268,6 +278,37 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     @Override
     public void getFilters(HashMap<Integer, Integer> filters) {
 
-            mMainFragment.changeDataSet(filters);
+        mMainFragment.changeDataSet(filters);
+    }
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                mMainFragment = new MainFragment();
+                return mMainFragment;
+            } else {
+                return new MapViewFragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) {
+                return "List";
+            } else {
+                return "Map";
+            }
+        }
     }
 }
