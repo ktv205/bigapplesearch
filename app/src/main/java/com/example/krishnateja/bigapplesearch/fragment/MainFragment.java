@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,17 +27,21 @@ import java.util.HashMap;
 /**
  * Created by krishnateja on 4/15/2015.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = MainFragment.class.getSimpleName();
     private View mView;
     RecyclerView mRecyclerView;
     ArrayList<MTAMainScreenModel> mMtaMainScreenModelArrayList = null;
     ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList = null;
     MainRecyclerAdapter mMainRecyclerAdapter;
+    public SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_main, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.main_swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         return mView;
     }
@@ -69,7 +75,7 @@ public class MainFragment extends Fragment {
 
     public void changeDataSet(int[] filters) {
         ArrayList<MTAMainScreenModel> localMTAMainScreenModelArrayList = new ArrayList<>();
-       localMTAMainScreenModelArrayList.addAll(mMtaMainScreenModelArrayList);
+        localMTAMainScreenModelArrayList.addAll(mMtaMainScreenModelArrayList);
         ArrayList<CitiBikeMainScreenModel> localCitiBikeMainScreenModelArrayList = new ArrayList<>();
         localCitiBikeMainScreenModelArrayList.addAll(mCitiBikeMainScreenModelArrayList);
         if (filters[AppConstants.InAppConstants.SHOW] == AppConstants.InAppConstants.SHOW_ALL) {
@@ -91,5 +97,26 @@ public class MainFragment extends Fragment {
 
         }
         mMainRecyclerAdapter.changeDataSet(localMTAMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList);
+    }
+
+    public void dataFromMain(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
+                             ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
+        Log.d(TAG, "in data from main");
+        if (mtaMainScreenModelArrayList != null) {
+            mMtaMainScreenModelArrayList = mtaMainScreenModelArrayList;
+        } else {
+            mMtaMainScreenModelArrayList.clear();
+        }
+        if (citiBikeMainScreenModelArrayList != null) {
+            mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
+        } else {
+            mCitiBikeMainScreenModelArrayList.clear();
+        }
+        mMainRecyclerAdapter.changeDataSet(mMtaMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

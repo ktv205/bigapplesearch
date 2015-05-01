@@ -13,6 +13,7 @@ import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.RequestParams;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,7 +60,6 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected");
         Location location = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
         double lat = location.getLatitude();
@@ -81,7 +81,6 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
 
 
     public void startGoogleApiClient() {
-        Log.d(TAG, "startGoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API).
                         addConnectionCallbacks(this)
@@ -101,7 +100,6 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     @Override
     public void getCITIData(ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
         mCITIBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
-        Log.d(TAG, mCITIBikeMainScreenModelArrayList.size() + " size of citi");
         mFlag++;
         if (mFlag == DONE) {
             sendUserToMainScreen();
@@ -110,34 +108,17 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     }
 
     public void callMTAAsyncTask(double lat, double lng) {
-        HashMap<String, String> getVariables = new HashMap<>();
-        getVariables.put(AppConstants.ServerVariables.GETMTAVARIABLE,
-                AppConstants.ServerVariables.GETMTAVARIABLE);
-        getVariables.put(AppConstants.ServerVariables.LAT,
-                String.valueOf(lat));
-        getVariables.put(AppConstants.ServerVariables.LNG,
-                String.valueOf(lng));
-        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.MTA_CODE).execute(
-                CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
-                        AppConstants.ServerVariables.FILE}, getVariables, mActivityContext));
+        RequestParams params=CommonFunctions.MTAParams(lat,lng,mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.MTA_CODE).execute(params);
     }
 
     public void callCITIAsyncTask(double lat, double lng) {
-        HashMap<String, String> getVariables = new HashMap<>();
-        getVariables.put(AppConstants.ServerVariables.GETCITIVARIABLE,
-                AppConstants.ServerVariables.GETCITIVARIABLE);
-        getVariables.put(AppConstants.ServerVariables.LAT,
-                String.valueOf(lat));
-        getVariables.put(AppConstants.ServerVariables.LNG,
-                String.valueOf(lng));
-        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.CITI_CODE).execute(
-                CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
-                        AppConstants.ServerVariables.FILE}, getVariables, mActivityContext));
+        RequestParams params=CommonFunctions.CitiParams(lat,lng,mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.CITI_CODE).execute(params);
 
     }
 
     public void sendUserToMainScreen() {
-        Log.d(TAG, "sendUserToMainScreen");
         Intent intent = new Intent(mActivityContext, MainActivity.class);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMTAMainScreenModelArrayList);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mCITIBikeMainScreenModelArrayList);

@@ -14,6 +14,7 @@ public class AppConstants {
         public static final String GETCITIVARIABLE = "citi";
         public static final String LAT = "lat";
         public static final String LNG = "lng";
+        public static final String OFFSET="offset";
     }
 
     public static class IntentExtras {
@@ -58,6 +59,10 @@ public class AppConstants {
         public static final int RATING=2;
         public static final int CUISINE=3;
         public static final int PRICE=4;
+        public static final int NEARBY_LEFT=0;
+        public static final int MTA_LEFT=2;
+        public static final int CITI_LEFT=3;
+        public static final int RESTAURANTS_LEFT=5;
 
 
     }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -22,13 +23,26 @@ import android.widget.SearchView;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.fragment.MainFragment;
+import com.example.krishnateja.bigapplesearch.models.AppConstants;
+import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.RequestParams;
+import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
+import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 import com.example.krishnateja.bigapplesearch.utils.RecentSearchContentProvider;
 import com.example.krishnateja.bigapplesearch.fragment.LeftDrawerFragment;
 import com.example.krishnateja.bigapplesearch.fragment.RightDrawerFragment;
 import com.example.krishnateja.bigapplesearch.utils.rightdrawerutils.RightDrawerRecyclerAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements RightDrawerRecyclerAdapter.Filters {
+public class MainActivity extends ActionBarActivity implements RightDrawerRecyclerAdapter.Filters,
+        LeftDrawerFragment.MenuSection, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        CommonAsyncTask.ServerData {
     private LeftDrawerFragment mLeftDrawerFragment;
     private RightDrawerFragment mRightDrawerFragment;
     private MainFragment mMainFragment;
@@ -40,6 +54,12 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int START_FLAG = 1;
     private static final int END_FLAG = 2;
+    private GoogleApiClient mGoogleApiClient;
+    private int mSelection = -1;
+    private int mFlag = 0;
+    private static final int DONE = 2;
+    private ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
+    private ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList;
 
 
     @Override
@@ -62,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mLeftDrawerFragment.getDrawerLayout(drawerLayout);
         mRightDrawerFragment.getDrawerLayout(drawerLayout);
-        mMainFragment=(MainFragment)getSupportFragmentManager().findFragmentById(R.id.main_container_fragment);
+        mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_container_fragment);
         setUp(drawerLayout, mToolbar);
 
 
@@ -137,9 +157,113 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
 
     @Override
     public void getFilters(int[] filters) {
-        Log.d(TAG, "get filter in main activity");
         mMainFragment.changeDataSet(filters);
+    }
 
+    @Override
+    public void getMenuSelection(int selection) {
+        mSelection = selection;
+        buildGoogleApiClient();
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mMainFragment.mSwipeRefreshLayout.setRefreshing(true);
+        Location location = LocationServices.FusedLocationApi
+                .getLastLocation(mGoogleApiClient);
+        double lat=location.getLatitude();
+        double lng=location.getLongitude();
+        if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
+
+             callMTAAsyncTask(lat,lng);
+             callCITIAsyncTask(lat,lng);
+        } else if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
+             callMTAAsyncTask(lat,lng,0);
+        } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT) {
+             callCITIAsyncTask(lat,lng,0);
+        } else {
+
+        }
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    public void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API).
+                        addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).build();
+        mGoogleApiClient.connect();
+    }
+
+    public void callMTAAsyncTask(double lat, double lng) {
+        RequestParams params = CommonFunctions.MTAParams(lat, lng, mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.MTA_CODE).execute(params);
+    }
+
+    public void callCITIAsyncTask(double lat, double lng) {
+        RequestParams params = CommonFunctions.CitiParams(lat, lng, mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.CITI_CODE).execute(params);
+
+    }
+
+    public void callMTAAsyncTask(double lat, double lng, int offset) {
+        RequestParams params = CommonFunctions.MTAParams(lat, lng, offset, mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.MTA_CODE).execute(params);
+    }
+
+    public void callCITIAsyncTask(double lat, double lng, int offset) {
+        RequestParams params = CommonFunctions.CitiParams(lat, lng, offset, mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.CITI_CODE).execute(params);
+
+    }
+
+    @Override
+    public void getMTAData(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList) {
+
+        mMTAMainScreenModelArrayList=mtaMainScreenModelArrayList;
+        mFlag++;
+        if (mSelection != AppConstants.InAppConstants.NEARBY_LEFT) {
+            mFlag = 0;
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,null);
+            mRightDrawerFragment.filtersFromLeftSelections(mSelection);
+            mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
+        } else if (mSelection!=AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
+            mFlag = 0;
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,mCitiBikeMainScreenModelArrayList);
+            mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
+            mRightDrawerFragment.filtersFromLeftSelections(mSelection);
+        }
+
+    }
+
+    @Override
+    public void getCITIData(ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
+        mCitiBikeMainScreenModelArrayList=citiBikeMainScreenModelArrayList;
+        mFlag++;
+        if (mSelection != AppConstants.InAppConstants.NEARBY_LEFT) {
+            mFlag = 0;
+            mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
+            mMainFragment.dataFromMain(null,mCitiBikeMainScreenModelArrayList);
+            mRightDrawerFragment.filtersFromLeftSelections(mSelection);
+
+        } else if (mSelection!=AppConstants.InAppConstants.RESTAURANT_CODE && mFlag == DONE) {
+            mMainFragment.mSwipeRefreshLayout.setRefreshing(false);
+            mFlag = 0;
+            mMainFragment.dataFromMain(mMTAMainScreenModelArrayList,mCitiBikeMainScreenModelArrayList);
+            mRightDrawerFragment.filtersFromLeftSelections(mSelection);
+        }
 
     }
 }

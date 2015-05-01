@@ -83,4 +83,60 @@ public class CommonFunctions {
         return new BigDecimal(toBeTruncated).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
+    public static RequestParams MTAParams(double lat, double lng, Context context) {
+        HashMap<String, String> getVariables = new HashMap<>();
+        getVariables.put(AppConstants.ServerVariables.GETMTAVARIABLE,
+                AppConstants.ServerVariables.GETMTAVARIABLE);
+        getVariables.put(AppConstants.ServerVariables.LAT,
+                String.valueOf(lat));
+        getVariables.put(AppConstants.ServerVariables.LNG,
+                String.valueOf(lng));
+        return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
+                AppConstants.ServerVariables.FILE}, getVariables, context);
+
+
+    }
+
+    public static RequestParams CitiParams(double lat, double lng, Context context) {
+        HashMap<String, String> getVariables = new HashMap<>();
+        getVariables.put(AppConstants.ServerVariables.GETCITIVARIABLE,
+                AppConstants.ServerVariables.GETCITIVARIABLE);
+        getVariables.put(AppConstants.ServerVariables.LAT,
+                String.valueOf(lat));
+        getVariables.put(AppConstants.ServerVariables.LNG,
+                String.valueOf(lng));
+
+        return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
+                AppConstants.ServerVariables.FILE}, getVariables, context);
+
+    }
+
+    public static RequestParams MTAParams(double lat, double lng, int offset, Context context) {
+        HashMap<String, String> getVariables = new HashMap<>();
+        getVariables.put(AppConstants.ServerVariables.GETMTAVARIABLE,
+                AppConstants.ServerVariables.GETMTAVARIABLE);
+        getVariables.put(AppConstants.ServerVariables.LAT,
+                String.valueOf(lat));
+        getVariables.put(AppConstants.ServerVariables.LNG,
+                String.valueOf(lng));
+        getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
+                AppConstants.ServerVariables.FILE}, getVariables, context);
+
+    }
+
+    public static RequestParams CitiParams(double lat, double lng, int offset, Context context) {
+        HashMap<String, String> getVariables = new HashMap<>();
+        getVariables.put(AppConstants.ServerVariables.GETCITIVARIABLE,
+                AppConstants.ServerVariables.GETCITIVARIABLE);
+        getVariables.put(AppConstants.ServerVariables.LAT,
+                String.valueOf(lat));
+        getVariables.put(AppConstants.ServerVariables.LNG,
+                String.valueOf(lng));
+        getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
+                AppConstants.ServerVariables.FILE}, getVariables, context);
+
+    }
+
 }

@@ -24,11 +24,13 @@ public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRe
     private HashMap<Integer, Integer> mSections;
     private static final int HEADING = 2;
     private static final int SELECTION = 1;
+    private Context mContext;
 
 
     public LeftDrawerRecyclerAdapter(Context context, ArrayList<String> data, HashMap<Integer, Integer> sections) {
         mData = data;
         mSections = sections;
+        mContext = context;
 
     }
 
@@ -58,10 +60,12 @@ public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRe
             viewHolder.selectionTextView.setText(mData.get(i));
             if (i == 2) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_mta);
-            } else if(i==0){
-
+            } else if (i == 0) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.locationicon);
-            }else if (i == 3) {
+                viewHolder.linearLayout.setBackgroundColor
+                        (mContext.getResources().getColor(R.color.selectColor));
+
+            } else if (i == 3) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_citybike);
             } else if (i == 5) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_restaurants);
@@ -91,6 +95,7 @@ public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRe
             } else {
                 selectionTextView = (TextView) itemView.findViewById(R.id.list_item_textview);
                 selectionImageView = (ImageView) itemView.findViewById(R.id.list_item_imageview);
+                linearLayout = (LinearLayout) itemView.findViewById(R.id.item_list_linear);
             }
         }
 

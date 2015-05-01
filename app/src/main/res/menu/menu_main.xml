@@ -10,4 +10,11 @@
         android:icon="@drawable/ic_action_filter_100"
         app:showAsAction="always"
         android:title="@string/app_name"></item>
+
+    <!--<item-->
+        <!--android:id="@+id/menu_progress"-->
+        <!--android:actionLayout="@layout/action_progress"-->
+        <!--android:menuCategory="container"-->
+        <!--app:showAsAction="always">-->
+    <!--</item>-->
 </menu>

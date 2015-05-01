@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +129,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     String query = lat + "," + lng;
                     String encodedQuery = Uri.encode(query);
                     String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
-                    Log.d(TAG,uriString);
                     Uri uri = Uri.parse(uriString);
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
                     mContext.startActivity(intent);

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.krishnateja.bigapplesearch.R;
+import com.example.krishnateja.bigapplesearch.models.AppConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,19 +60,12 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean changed = false;
-                for (int i = 0; i < mDataSize; i++) {
-                    if (mFilterList[i] != mSendingList[i]) {
-                        changed = true;
-                    }
-                    Log.d(TAG, "mFilterList->" + mFilterList[i] + "mSendingList->" + mSendingList[i]);
+                boolean changed = changed();
 
-                }
-                mSendingList = Arrays.copyOf(mFilterList, mFilterList.length);;
+                mSendingList = Arrays.copyOf(mFilterList, mFilterList.length);
+                ;
                 if (changed) {
                     mFilters.getFilters(mSendingList);
-                } else {
-                    Log.d(TAG, "nothing changed");
                 }
                 drawerLayout.closeDrawer(GravityCompat.END);
             }
@@ -106,8 +100,12 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
         viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "in menu->" + viewHolder.spinner.getSelectedItemPosition());
-                mFilterList[pos] = viewHolder.spinner.getSelectedItemPosition();
+                int positionInsideSpinner = viewHolder.spinner.getSelectedItemPosition();
+                mFilterList[pos] = positionInsideSpinner;
+                if (pos == AppConstants.InAppConstants.SHOW) {
+
+                }
+
             }
 
             @Override
@@ -120,6 +118,23 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
 
     @Override
     public int getItemCount() {
-        return mTextData.size();
+        return mDataSize;
+    }
+
+    public boolean changed() {
+        boolean changed = false;
+        for (int i = 0; i < mDataSize; i++) {
+            if (mFilterList[i] != mSendingList[i]) {
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    public void changeDataSet(ArrayList<Integer> integerData, ArrayList<String> stringData) {
+        mTextData = stringData;
+        mSpinnerData = integerData;
+        mDataSize = mTextData.size();
+        notifyDataSetChanged();
     }
 }
