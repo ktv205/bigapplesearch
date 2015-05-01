@@ -31,7 +31,11 @@
         <item>3 star and up</item>
         <item>2 star and up</item>
         <item>4 star and up</item>
-
-
+    </string-array>
+    <string-array name="sections">
+        <item>All</item>
+        <item>Subway</item>
+        <item>Citi Bikes</item>
+        <item>Restaurants</item>
     </string-array>
 </resources>

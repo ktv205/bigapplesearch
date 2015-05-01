@@ -2,7 +2,6 @@ package com.example.krishnateja.bigapplesearch.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
@@ -55,7 +54,6 @@ public class CommonAsyncTask extends AsyncTask<RequestParams, Void, String> {
         if (s != null) {
             if (mCode == AppConstants.InAppConstants.MTA_CODE) {
                 ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList = ServerJSONParser.parseMTAMainScreenJSON(s);
-                Log.d(TAG, "onPostExecue");
                 mServerData.getMTAData(mtaMainScreenModelArrayList);
             } else if (mCode == AppConstants.InAppConstants.CITI_CODE) {
                 ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList;

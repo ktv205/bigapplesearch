@@ -3,12 +3,13 @@
     android:layout_width="240dp"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:padding="10dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="48dp"
         android:layout_marginBottom="40dp"
         android:orientation="horizontal">
 
@@ -20,9 +21,14 @@
             android:text="@string/filters"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <TextView
+        <Button
+            android:id="@+id/fragment_right_drawer_done_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:minHeight="35dip"
             android:text="@string/done"/>
     </LinearLayout>
 

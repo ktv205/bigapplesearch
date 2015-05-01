@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
@@ -58,7 +57,6 @@ public class CommonFunctions {
     }
 
     public static RequestParams buildParams(String[] path, HashMap<String, String> getVariables, Context context) {
-        Log.d(TAG, "buildparams ");
         RequestParams params = new RequestParams();
         Uri.Builder url = new Uri.Builder();
         url.scheme(AppConstants.ServerVariables.SCHEME)

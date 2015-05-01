@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.utils.rightdrawerutils.RightDrawerItemDecorator;
@@ -27,13 +29,6 @@ public class RightDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_right_drawer, container, false);
-        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.fragment_right_drawer_recycle_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addItemDecoration(new RightDrawerItemDecorator(getActivity(), null));
-        recyclerView.setLayoutManager(layoutManager);
-        RightDrawerRecyclerAdapter rightDrawerRecyclerAdapter=new RightDrawerRecyclerAdapter(getActivity(),loadTextData(),loadSpinnerData());
-        recyclerView.setAdapter(rightDrawerRecyclerAdapter);
         return mView;
     }
 
@@ -42,8 +37,23 @@ public class RightDrawerFragment extends Fragment {
         mDrawerLayout=drawerLayout;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Button button=(Button)mView.findViewById(R.id.fragment_right_drawer_done_button);
+        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.fragment_right_drawer_recycle_view);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(new RightDrawerItemDecorator(getActivity(), null));
+        recyclerView.setLayoutManager(layoutManager);
+        RightDrawerRecyclerAdapter rightDrawerRecyclerAdapter=new RightDrawerRecyclerAdapter(getActivity(),
+                loadTextData(),loadSpinnerData(),button,mDrawerLayout);
+        recyclerView.setAdapter(rightDrawerRecyclerAdapter);
+    }
+
     public ArrayList<String> loadTextData(){
         ArrayList<String> data=new ArrayList<>();
+        data.add("Show");
         data.add("Distance");
         data.add("Rating");
         data.add("Cuisine");
@@ -52,6 +62,7 @@ public class RightDrawerFragment extends Fragment {
     }
     public ArrayList<Integer> loadSpinnerData(){
         ArrayList<Integer> data=new ArrayList<>();
+        data.add(R.array.sections);
         data.add(R.array.distance);
         data.add(R.array.rating);
         data.add(R.array.cuisine);

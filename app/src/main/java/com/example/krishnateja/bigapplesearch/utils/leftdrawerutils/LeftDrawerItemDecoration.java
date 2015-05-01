@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -24,7 +23,6 @@ public class LeftDrawerItemDecoration extends RecyclerView.ItemDecoration {
 
 
     public LeftDrawerItemDecoration(Context context, AttributeSet attrs) {
-        Log.d(TAG, "LeftDrawerItemDecoration->");
         final TypedArray a = context
                 .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
         mDivider = a.getDrawable(0);
@@ -91,7 +89,7 @@ public class LeftDrawerItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             View child=parent.getChildAt(i);
             if(i==0 || i==3) {
-                Log.d(TAG,"at 0 and 3"+i);
+
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
                 if (orientation == LinearLayoutManager.VERTICAL) {
                     top = child.getBottom() + params.bottomMargin;

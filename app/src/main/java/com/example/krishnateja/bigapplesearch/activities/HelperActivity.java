@@ -101,6 +101,7 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     @Override
     public void getCITIData(ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
         mCITIBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
+        Log.d(TAG, mCITIBikeMainScreenModelArrayList.size() + " size of citi");
         mFlag++;
         if (mFlag == DONE) {
             sendUserToMainScreen();
@@ -136,6 +137,7 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     }
 
     public void sendUserToMainScreen() {
+        Log.d(TAG, "sendUserToMainScreen");
         Intent intent = new Intent(mActivityContext, MainActivity.class);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMTAMainScreenModelArrayList);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mCITIBikeMainScreenModelArrayList);

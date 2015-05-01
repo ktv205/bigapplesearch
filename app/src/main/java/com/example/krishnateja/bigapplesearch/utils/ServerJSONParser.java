@@ -40,9 +40,9 @@ public class ServerJSONParser {
 
     public static ArrayList<MTAMainScreenModel> parseMTAMainScreenJSON(String jsonString) {
         ArrayList<MTAMainScreenModel> mainScreenModels = new ArrayList<>();
-        Log.d(TAG, "parseMTAMainScreenJSON");
+
         try {
-            Log.d(TAG, "in not null of try");
+
             JSONArray mainArray = new JSONArray(jsonString);
             for (int i = 0; i < mainArray.length(); i++) {
                 JSONObject stopsObject = mainArray.getJSONObject(i);
@@ -70,7 +70,7 @@ public class ServerJSONParser {
             }
             return mainScreenModels;
         } catch (JSONException e) {
-            Log.d(TAG, "in null of catch");
+
             e.printStackTrace();
             return null;
         }
@@ -98,13 +98,12 @@ public class ServerJSONParser {
                 citiBikeMainScreenModelArrayList.add(citiBikeMainScreenModel);
 
             }
+            return citiBikeMainScreenModelArrayList;
 
 
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-
-
-        return null;
     }
 }
