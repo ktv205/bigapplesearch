@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
@@ -22,7 +21,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by krishnateja on 4/29/2015.
@@ -121,6 +119,11 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     @Override
     public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
          mRestaurantMainScreenModelArrayList=restaurantMainScreenModelArrayList;
+        if(mRestaurantMainScreenModelArrayList!=null){
+            Log.d(TAG,"mRestaurantMainScreenModelArrayList->"+mRestaurantMainScreenModelArrayList.size());
+        }else{
+            Log.d(TAG,"mRestaurantMainScreenModelArrayList is null");
+        }
         mFlag++;
         if(mFlag==DONE){
             sendUserToMainScreen();

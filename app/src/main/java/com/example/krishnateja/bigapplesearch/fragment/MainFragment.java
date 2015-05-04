@@ -55,7 +55,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (intent != null && intent.hasExtra(AppConstants.IntentExtras.MTA) && intent.hasExtra(AppConstants.IntentExtras.CITI)) {
             mMtaMainScreenModelArrayList = intent.getParcelableArrayListExtra(AppConstants.IntentExtras.MTA);
             mCitiBikeMainScreenModelArrayList = intent.getParcelableArrayListExtra(AppConstants.IntentExtras.CITI);
-            mCitiBikeMainScreenModelArrayList=intent.getParcelableArrayListExtra(AppConstants.IntentExtras.RES);
+            mRestaurantMainScreenModelArrayList=intent.getParcelableArrayListExtra(AppConstants.IntentExtras.RES);
 
         }
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_main_recycle_view);

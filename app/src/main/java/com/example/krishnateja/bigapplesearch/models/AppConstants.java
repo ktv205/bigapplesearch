@@ -16,7 +16,7 @@ public class AppConstants {
         public static final String LNG = "lng";
         public static final String OFFSET = "offset";
         public static final String RES_AUTHORITY="52.5.187.1";
-        public static final String LOCATION_PATH="path";
+        public static final String LOCATION_PATH="location";
 
     }
 

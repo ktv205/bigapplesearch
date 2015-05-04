@@ -139,8 +139,10 @@ public class ServerJSONParser {
                 }
                 restaurantMainScreenModel.setCategories(cat);
                 restaurantMainScreenModel.setPhone(resultObject.getString(DISPLAY_PHONE));
-                restaurantMainScreenModel.setAddress(resultObject.getJSONArray(DISPLAY_ADDRESS).get(0).toString());
-                JSONObject coordObject = resultObject.getJSONObject(COORDINATE);
+                JSONObject locationObject=resultObject.getJSONObject(LOCATION);
+                restaurantMainScreenModel.setAddress(locationObject.getJSONArray(DISPLAY_ADDRESS).get(0).toString());
+
+                JSONObject coordObject = locationObject.getJSONObject(COORDINATE);
                 restaurantMainScreenModel.setLat(coordObject.getDouble(LATITUDE));
                 restaurantMainScreenModel.setLng(coordObject.getDouble(LONGITUDE));
                 restaurantMainScreenModel.setDistance(resultObject.getDouble(DISTANCE));
@@ -153,6 +155,8 @@ public class ServerJSONParser {
                     violation.add(violationJsonArray.getString(j));
 
                 }
+                restaurantMainScreenModel.setCategories(cat);
+                restaurantMainScreenModel.setViolationCodes(violation);
                 restaurantMainScreenModel.setIsClosed(resultObject.getBoolean(CLOSED));
                 restaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
 
