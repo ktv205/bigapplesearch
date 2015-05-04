@@ -7,6 +7,7 @@ import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,9 @@ public class CommonAsyncTask extends AsyncTask<RequestParams, Void, String> {
         public void getMTAData(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList);
 
         public void getCITIData(ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList);
+
+        public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList);
+
 
     }
 
@@ -59,7 +63,11 @@ public class CommonAsyncTask extends AsyncTask<RequestParams, Void, String> {
                 ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList;
                 citiBikeMainScreenModelArrayList = ServerJSONParser.parseCitiBikeMainScreen(s);
                 mServerData.getCITIData(citiBikeMainScreenModelArrayList);
+            }else if(mCode==AppConstants.InAppConstants.RESTAURANT_CODE){
+                ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList=ServerJSONParser.parseRestaurantMainScreen(s);
+                mServerData.getResData(restaurantMainScreenModelArrayList);
             }
+
 
 
         }

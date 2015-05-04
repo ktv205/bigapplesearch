@@ -139,4 +139,19 @@ public class CommonFunctions {
 
     }
 
+    public static RequestParams restaurantParams(double lat,double lng,int offset,Context context){
+        Uri.Builder builder=new Uri.Builder();
+        builder.scheme(AppConstants.ServerVariables.SCHEME);
+        builder.authority(AppConstants.ServerVariables.RES_AUTHORITY);
+        builder.appendPath(AppConstants.ServerVariables.LOCATION_PATH);
+        builder.appendPath(String.valueOf(lat));
+        builder.appendPath(String.valueOf(lng));
+        Uri url=builder.build();
+        RequestParams params=new RequestParams();
+        params.setMethod(AppConstants.ServerVariables.METHOD);
+        params.setURI(url.toString());
+        params.setContext(context);
+        return params;
+    }
+
 }

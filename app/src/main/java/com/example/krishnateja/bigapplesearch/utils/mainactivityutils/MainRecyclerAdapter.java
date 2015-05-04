@@ -17,6 +17,7 @@ import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 
 import java.util.ArrayList;
@@ -33,17 +34,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Context mContext;
     public ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
     public ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList;
+    public ArrayList<RestaurantMainScreenModel> mRestaurantMainScreenModelArrayList;
     private int mMTASize;
     private int mCitiSize;
+    private int mResSize;
     private int mMoreSize=0;
 
     public MainRecyclerAdapter(Context context, ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
-                               ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList) {
+                               ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList,ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
         mContext = context;
         mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
         mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
         mMTASize = mMTAMainScreenModelArrayList.size();
         mCitiSize = mCitiBikeMainScreenModelArrayList.size();
+        mRestaurantMainScreenModelArrayList=restaurantMainScreenModelArrayList;
+        mResSize=mRestaurantMainScreenModelArrayList.size();
 
     }
 
@@ -103,6 +108,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             });
 
+        }else if(type==AppConstants.InAppConstants.RESTAURANT_CODE){
+            Log.d(TAG,"fill res details");
         }
         if(type!=AppConstants.InAppConstants.MORE_CODE) {
             viewHolder.phoneTextView.setOnClickListener(this);
@@ -187,12 +194,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getItemViewType(int position) {
         if (position < mMTASize) {
             return AppConstants.InAppConstants.MTA_CODE;
-        } else if(mCitiBikeMainScreenModelArrayList.size()!=0) {
+        } else if(position<mMTASize+mCitiSize) {
             return AppConstants.InAppConstants.CITI_CODE;
         }else if(mMoreSize==1){
             return AppConstants.InAppConstants.MORE_CODE;
-        }else{
-            return -1;
+        }else {
+            return AppConstants.InAppConstants.RESTAURANT_CODE;
         }
 
     }

@@ -11,5 +11,6 @@
     <color name="citiColor">#3d5588</color>
     <color name="red">#FF0000</color>
     <color name="loadColor">#B2B2FF</color>
+    <color name="resBlue">#00FFFF</color>
 
 </resources>

@@ -33,6 +33,7 @@ import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 import com.example.krishnateja.bigapplesearch.utils.RecentSearchContentProvider;
@@ -272,6 +273,11 @@ public class MainActivity extends ActionBarActivity implements RightDrawerRecycl
             mMainFragment.dataFromMain(mMTAMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
             mRightDrawerFragment.filtersFromLeftSelections(mSelection);
         }
+
+    }
+
+    @Override
+    public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
 
     }
 

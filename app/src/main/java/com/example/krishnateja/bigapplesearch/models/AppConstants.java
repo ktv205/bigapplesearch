@@ -15,11 +15,15 @@ public class AppConstants {
         public static final String LAT = "lat";
         public static final String LNG = "lng";
         public static final String OFFSET = "offset";
+        public static final String RES_AUTHORITY="52.5.187.1";
+        public static final String LOCATION_PATH="path";
+
     }
 
     public static class IntentExtras {
         public static final String MTA = "mta_data_array_list";
         public static final String CITI = "citi_data_array_list";
+        public static final String RES = "res_data_array_list";
     }
 
     public static class InAppConstants {
@@ -63,7 +67,7 @@ public class AppConstants {
         public static final int MTA_LEFT = 2;
         public static final int CITI_LEFT = 3;
         public static final int RESTAURANTS_LEFT = 5;
-        public static final int MORE_CODE = 3;
+        public static final int MORE_CODE = 4;
         public static final String DISTANCE_TEXT = "Distance";
         public static final String SHOW_TEXT = "show";
         public static final String RATING_TEXT = "Rating";

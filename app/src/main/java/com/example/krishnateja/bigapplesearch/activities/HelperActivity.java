@@ -14,6 +14,7 @@ import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,9 +40,10 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     private static final String MTA = "mta";
     private static final String CITI = "citiBikes";
     private static final String RESTAURANTS = "restaurants";
-    private static final int DONE = 2;
+    private static final int DONE = 3;
     private ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
     private ArrayList<CitiBikeMainScreenModel> mCITIBikeMainScreenModelArrayList;
+    private ArrayList<RestaurantMainScreenModel> mRestaurantMainScreenModelArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,13 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
         double lng = location.getLongitude();
         callMTAAsyncTask(lat, lng);
         callCITIAsyncTask(lat, lng);
+        callResAsyncTask(lat, lng);
+    }
+
+    private void callResAsyncTask(double lat, double lng) {
+       RequestParams params= CommonFunctions.restaurantParams(lat, lng, -1, mActivityContext);
+        new CommonAsyncTask(mActivityContext, AppConstants.InAppConstants.RESTAURANT_CODE).execute(params);
+
     }
 
     @Override
@@ -94,6 +103,7 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
         mFlag++;
         if (mFlag == DONE) {
             sendUserToMainScreen();
+            mFlag=0;
         }
     }
 
@@ -103,6 +113,18 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
         mFlag++;
         if (mFlag == DONE) {
             sendUserToMainScreen();
+            mFlag=0;
+        }
+
+    }
+
+    @Override
+    public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
+         mRestaurantMainScreenModelArrayList=restaurantMainScreenModelArrayList;
+        mFlag++;
+        if(mFlag==DONE){
+            sendUserToMainScreen();
+            mFlag=0;
         }
 
     }
@@ -122,6 +144,7 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
         Intent intent = new Intent(mActivityContext, MainActivity.class);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMTAMainScreenModelArrayList);
         intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mCITIBikeMainScreenModelArrayList);
+        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.RES,mRestaurantMainScreenModelArrayList);
         startActivity(intent);
         finish();
 

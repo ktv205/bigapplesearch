@@ -18,6 +18,7 @@ import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 import com.example.krishnateja.bigapplesearch.utils.mainactivityutils.MainRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     RecyclerView mRecyclerView;
     ArrayList<MTAMainScreenModel> mMtaMainScreenModelArrayList = null;
     ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList = null;
+    private ArrayList<RestaurantMainScreenModel> mRestaurantMainScreenModelArrayList;
     MainRecyclerAdapter mMainRecyclerAdapter;
     public SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -53,11 +55,13 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (intent != null && intent.hasExtra(AppConstants.IntentExtras.MTA) && intent.hasExtra(AppConstants.IntentExtras.CITI)) {
             mMtaMainScreenModelArrayList = intent.getParcelableArrayListExtra(AppConstants.IntentExtras.MTA);
             mCitiBikeMainScreenModelArrayList = intent.getParcelableArrayListExtra(AppConstants.IntentExtras.CITI);
+            mCitiBikeMainScreenModelArrayList=intent.getParcelableArrayListExtra(AppConstants.IntentExtras.RES);
+
         }
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_main_recycle_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-        mMainRecyclerAdapter = new MainRecyclerAdapter(getActivity(), mMtaMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList);
+        mMainRecyclerAdapter = new MainRecyclerAdapter(getActivity(), mMtaMainScreenModelArrayList, mCitiBikeMainScreenModelArrayList,mRestaurantMainScreenModelArrayList);
         mRecyclerView.setAdapter(mMainRecyclerAdapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override

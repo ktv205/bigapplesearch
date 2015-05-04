@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,21 @@ public class ServerJSONParser {
     private static final String STATUS_VALUE = "statusValue";
     private static final String AVAILABLE_BIKES = "availableBikes";
     private static final String ADDRESS = "stAddress1";
+    public static final String RESULTS = "results";
+    public static final String CATEGORIES = "categories";
+    public static final String DISPLAY_PHONE = "display_phone";
+    public static final String IMAGE = "image_url";
+    public static final String CLOSED = "is_closed";
+    public static final String LOCATION = "location";
+    public static final String address = "address";
+    public static final String CITY = "city";
+    public static final String COORDINATE = "coordinate";
+    public static final String DISPLAY_ADDRESS = "display_address";
+    public static final String NAME = "name";
+    public static final String PHONE = "phone";
+    public static final String RATING = "rating";
+    public static final String URL = "url";
+    public static final String VIOLATION = "violation_codes";
 
 
     public static ArrayList<MTAMainScreenModel> parseMTAMainScreenJSON(String jsonString) {
@@ -106,4 +122,49 @@ public class ServerJSONParser {
             return null;
         }
     }
+
+    public static ArrayList<RestaurantMainScreenModel> parseRestaurantMainScreen(String jsonString) {
+        ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList = new ArrayList<>();
+        try {
+            JSONObject mainObject = new JSONObject(jsonString);
+            JSONArray resultsArray = mainObject.getJSONArray(RESULTS);
+            for (int i = 0; i < resultsArray.length(); i++) {
+                RestaurantMainScreenModel restaurantMainScreenModel = new RestaurantMainScreenModel();
+                JSONObject resultObject = resultsArray.getJSONObject(i);
+                JSONArray catArray = resultObject.getJSONArray(CATEGORIES);
+                ArrayList<String> cat = new ArrayList<>();
+                for (int j = 0; j < catArray.length(); j++) {
+                    JSONArray innercatArray = catArray.getJSONArray(j);
+                    cat.add(innercatArray.getString(0));
+                }
+                restaurantMainScreenModel.setCategories(cat);
+                restaurantMainScreenModel.setPhone(resultObject.getString(DISPLAY_PHONE));
+                restaurantMainScreenModel.setAddress(resultObject.getJSONArray(DISPLAY_ADDRESS).get(0).toString());
+                JSONObject coordObject = resultObject.getJSONObject(COORDINATE);
+                restaurantMainScreenModel.setLat(coordObject.getDouble(LATITUDE));
+                restaurantMainScreenModel.setLng(coordObject.getDouble(LONGITUDE));
+                restaurantMainScreenModel.setDistance(resultObject.getDouble(DISTANCE));
+                restaurantMainScreenModel.setResName(resultObject.getString(NAME));
+                restaurantMainScreenModel.setUrl(resultObject.getString(URL));
+                restaurantMainScreenModel.setRating(resultObject.getDouble(RATING));
+                JSONArray violationJsonArray = resultObject.getJSONArray(VIOLATION);
+                ArrayList<String> violation = new ArrayList<>();
+                for (int j = 0; j < violationJsonArray.length(); j++) {
+                    violation.add(violationJsonArray.getString(j));
+
+                }
+                restaurantMainScreenModel.setIsClosed(resultObject.getBoolean(CLOSED));
+                restaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
+
+
+            }
+            return restaurantMainScreenModelArrayList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
 }
