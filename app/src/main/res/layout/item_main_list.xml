@@ -53,6 +53,8 @@
                     android:id="@+id/item_main_list_card_distance_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
@@ -74,6 +76,8 @@
                     android:id="@+id/item_main_list_card_directions_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/rsz_directions__white" />
 
                 <TextView
@@ -101,6 +105,8 @@
                     android:id="@+id/item_main_list_card_phone_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/linkColor" />
 
@@ -120,14 +126,19 @@
                     android:isIndicator="true"
                     android:numStars="5"
                     android:stepSize="0.1"
-                    android:visibility="gone" />
+                     />
 
                 <TextView
                     android:id="@+id/item_main_list_card_price_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:visibility="gone" />
+                    android:gravity="right"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+
+                     />
 
             </LinearLayout>
 

@@ -13,14 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.krishnateja.bigapplesearch.R;
-import com.example.krishnateja.bigapplesearch.models.AppConstants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by krishnateja on 4/28/2015.
@@ -29,17 +27,27 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
     private Context mContext;
     private ArrayList<String> mTextData;
     private ArrayList<Integer> mSpinnerData;
+    private HashMap<Integer, Boolean> mFiltersToShow;
     private int mDataSize = 0;
     private static final String TAG = RightDrawerRecyclerAdapter.class.getSimpleName();
-    private HashMap<Integer, Integer> mFilterList;
-    private HashMap<Integer, Integer> mSendingList;
+    private HashMap<String, Integer> mSpinnerSelection;
+    private HashMap<String, Integer> mPreviousSelection;
 
-    public interface Filters {
-        public void getFilters(HashMap<Integer, Integer> filters);
+    public HashMap<String, Integer> getmSpinnerSelection() {
+        return mSpinnerSelection;
     }
 
-    private Filters mFilters;
+    private SpinnerSelectionInterface mSpinnerSelectionInterface;
 
+    public interface SpinnerSelectionInterface {
+        void getSpinnerSelection(HashMap<String, Integer> spinnerSelection);
+    }
+
+    public void setmSpinnerSelection(HashMap<String, Integer> mSpinnerSelection) {
+        mPreviousSelection = new HashMap<>();
+        mPreviousSelection.putAll(mSpinnerSelection);
+        this.mSpinnerSelection = mSpinnerSelection;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         Spinner spinner;
@@ -53,31 +61,40 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
     }
 
     public RightDrawerRecyclerAdapter(Context context, ArrayList<String> textData,
-                                      ArrayList<Integer> spinnerData, Button button, final DrawerLayout drawerLayout) {
+                                      ArrayList<Integer> spinnerData, HashMap<Integer, Boolean> filtersToShow, Button button, final DrawerLayout drawerLayout) {
         mContext = context;
-        mTextData = textData;
-        mSpinnerData = spinnerData;
+        mTextData = new ArrayList<>();
+        mSpinnerData = new ArrayList<>();
+        mFiltersToShow = filtersToShow;
+        applyFiltersToData(textData, spinnerData);
         mDataSize = mTextData.size();
-        mFilterList = new HashMap<>();
-        mSendingList = new HashMap<>();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean changed = changed();
-                mSendingList.clear();
-                mSendingList.putAll(mFilterList);
-
-                if (changed) {
+                if (changed()) {
                     Log.d(TAG, "changed");
-                    mFilters.getFilters(mSendingList);
+                } else {
+                    Log.d(TAG, "not changed");
                 }
+                mSpinnerSelectionInterface.getSpinnerSelection(mSpinnerSelection);
+                mPreviousSelection.clear();
+                mPreviousSelection.putAll(mSpinnerSelection);
                 drawerLayout.closeDrawer(GravityCompat.END);
             }
         });
-        try {
-            mFilters = (Filters) mContext;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(mContext.toString() + " must implement Filters");
+
+        mSpinnerSelectionInterface = (SpinnerSelectionInterface) context;
+
+
+    }
+
+    private void applyFiltersToData(ArrayList<String> textData, ArrayList<Integer> spinnerData) {
+        for (Map.Entry<Integer, Boolean> entry : mFiltersToShow.entrySet()) {
+            if (entry.getValue()) {
+                Log.d(TAG, "in  get value");
+                mTextData.add(textData.get(entry.getKey()));
+                mSpinnerData.add(spinnerData.get(entry.getKey()));
+            }
         }
     }
 
@@ -90,29 +107,19 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
     @Override
     public void onBindViewHolder(final RightDrawerRecyclerAdapter.ViewHolder viewHolder, int i) {
         final int pos = i;
+        Log.d(TAG, "true->" + mFiltersToShow.get(i));
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
                 mSpinnerData.get(i), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         viewHolder.spinner.setAdapter(adapter);
         viewHolder.textView.setText(mTextData.get(i));
+        if (mSpinnerSelection.containsKey(viewHolder.textView.getText().toString())) {
+            viewHolder.spinner.setSelection(mSpinnerSelection.get(viewHolder.textView.getText().toString()));
+        }
         viewHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int positionInsideSpinner = viewHolder.spinner.getSelectedItemPosition();
-                String text = viewHolder.textView.getText().toString();
-                if (text.equals(AppConstants.InAppConstants.SHOW_TEXT)) {
-                    mFilterList.put(AppConstants.InAppConstants.SHOW, positionInsideSpinner);
-                } else if (text.equals(AppConstants.InAppConstants.CUISINE_TEXT)) {
-                    mFilterList.put(AppConstants.InAppConstants.CUISINE, positionInsideSpinner);
-                } else if (text.equals(AppConstants.InAppConstants.DISTANCE_TEXT)) {
-                    mFilterList.put(AppConstants.InAppConstants.DISTANCE, positionInsideSpinner);
-                } else if (text.equals(AppConstants.InAppConstants.PRICE_TEXT)) {
-                    mFilterList.put(AppConstants.InAppConstants.PRICE, positionInsideSpinner);
-                } else {
-                    mFilterList.put(AppConstants.InAppConstants.RATING, positionInsideSpinner);
-                }
-
-
+                mSpinnerSelection.put(viewHolder.textView.getText().toString(), position);
             }
 
             @Override
@@ -128,16 +135,22 @@ public class RightDrawerRecyclerAdapter extends RecyclerView.Adapter<RightDrawer
         return mDataSize;
     }
 
-    public boolean changed() {
-        return !mFilterList.equals(mSendingList);
+
+    public void changeDataSet(ArrayList<Integer> integerData, ArrayList<String> stringData,
+                              HashMap<Integer, Boolean> filtersToShow) {
+        mTextData.clear();
+        mSpinnerData.clear();
+        mFiltersToShow.clear();
+        mFiltersToShow = filtersToShow;
+        applyFiltersToData(stringData, integerData);
+        mDataSize = mTextData.size();
+        Log.d(TAG, "size of mDataSize->" + mDataSize);
+        notifyDataSetChanged();
     }
 
-    public void changeDataSet(ArrayList<Integer> integerData, ArrayList<String> stringData) {
-        mTextData = stringData;
-        mSpinnerData = integerData;
-        mDataSize = mTextData.size();
-        notifyDataSetChanged();
-        mFilterList.clear();
-        mSendingList.clear();
+    public boolean changed() {
+        return !mSpinnerSelection.equals(mPreviousSelection);
     }
+
+
 }

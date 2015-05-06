@@ -25,12 +25,14 @@ public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRe
     private static final int HEADING = 2;
     private static final int SELECTION = 1;
     private Context mContext;
+    private int mCurrentSelection;
 
 
-    public LeftDrawerRecyclerAdapter(Context context, ArrayList<String> data, HashMap<Integer, Integer> sections) {
+    public LeftDrawerRecyclerAdapter(Context context, ArrayList<String> data, HashMap<Integer, Integer> sections,int currentSelection) {
         mData = data;
         mSections = sections;
         mContext = context;
+        mCurrentSelection=currentSelection;
 
     }
 
@@ -62,13 +64,13 @@ public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRe
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_mta);
             } else if (i == 0) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.locationicon);
-                viewHolder.linearLayout.setBackgroundColor
-                        (mContext.getResources().getColor(R.color.selectColor));
-
             } else if (i == 3) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_citybike);
             } else if (i == 5) {
                 viewHolder.selectionImageView.setImageResource(R.drawable.rsz_restaurants);
+            }
+            if(i==mCurrentSelection){
+                viewHolder.linearLayout.setBackgroundColor(mContext.getResources().getColor(R.color.selectColor));
             }
 
         }

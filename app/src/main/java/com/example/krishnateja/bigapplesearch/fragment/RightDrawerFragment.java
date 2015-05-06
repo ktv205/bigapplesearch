@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +18,29 @@ import com.example.krishnateja.bigapplesearch.utils.rightdrawerutils.RightDrawer
 import com.example.krishnateja.bigapplesearch.utils.rightdrawerutils.RightDrawerRecyclerAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by krishnateja on 4/26/2015.
  */
 public class RightDrawerFragment extends Fragment {
     private static final String TAG = RightDrawerFragment.class.getSimpleName();
+    private int mSelection = 0;
 
     private View mView;
     private DrawerLayout mDrawerLayout;
     private RightDrawerRecyclerAdapter mRightDrawerRecyclerAdapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            mSelection = savedInstanceState.getInt(AppConstants.BundleExtras.LEFT_SELECTED);
+        }
         mView = inflater.inflate(R.layout.fragment_right_drawer, container, false);
         return mView;
-    }
-
-    public void getDrawerLayout(DrawerLayout drawerLayout) {
-
-        mDrawerLayout = drawerLayout;
     }
 
     @Override
@@ -49,11 +53,31 @@ public class RightDrawerFragment extends Fragment {
         recyclerView.addItemDecoration(new RightDrawerItemDecorator(getActivity(), null));
         recyclerView.setLayoutManager(layoutManager);
         mRightDrawerRecyclerAdapter = new RightDrawerRecyclerAdapter(getActivity(),
-                loadNearByTextData(), loadNearBySpinnerData(), button, mDrawerLayout);
+                loadTextData(), loadSpinnerData(), filtersToShow(), button, mDrawerLayout);
+        if (savedInstanceState != null) {
+            HashMap<String, Integer> hashMap = (HashMap) savedInstanceState.getSerializable(AppConstants.BundleExtras.FILTERS_SELECTED);
+            mRightDrawerRecyclerAdapter.setmSpinnerSelection(hashMap);
+        } else {
+            mRightDrawerRecyclerAdapter.setmSpinnerSelection(new HashMap<String, Integer>());
+        }
+
+
         recyclerView.setAdapter(mRightDrawerRecyclerAdapter);
     }
 
-    public ArrayList<String> loadNearByTextData() {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(AppConstants.BundleExtras.LEFT_SELECTED, mSelection);
+        outState.putSerializable(AppConstants.BundleExtras.FILTERS_SELECTED, mRightDrawerRecyclerAdapter.getmSpinnerSelection());
+        super.onSaveInstanceState(outState);
+    }
+
+    public void getDrawerLayout(DrawerLayout drawerLayout) {
+        mDrawerLayout = drawerLayout;
+    }
+
+
+    public ArrayList<String> loadTextData() {
         ArrayList<String> data = new ArrayList<>();
         data.add(AppConstants.InAppConstants.SHOW_TEXT);
         data.add(AppConstants.InAppConstants.DISTANCE_TEXT);
@@ -63,7 +87,7 @@ public class RightDrawerFragment extends Fragment {
         return data;
     }
 
-    public ArrayList<Integer> loadNearBySpinnerData() {
+    public ArrayList<Integer> loadSpinnerData() {
         ArrayList<Integer> data = new ArrayList<>();
         data.add(R.array.sections);
         data.add(R.array.distance);
@@ -74,31 +98,33 @@ public class RightDrawerFragment extends Fragment {
     }
 
     public void filtersFromLeftSelections(int selection) {
+        mSelection = selection;
+        mRightDrawerRecyclerAdapter.setmSpinnerSelection(new HashMap<String, Integer>());
+        mRightDrawerRecyclerAdapter.changeDataSet(loadSpinnerData(), loadTextData(), filtersToShow());
 
-        if (selection == AppConstants.InAppConstants.NEARBY_LEFT) {
+    }
 
-            mRightDrawerRecyclerAdapter.changeDataSet(loadNearBySpinnerData(), loadNearByTextData());
-        } else if (selection == AppConstants.InAppConstants.MTA_LEFT) {
-            mRightDrawerRecyclerAdapter.changeDataSet(loadCitiAndMTASpinnerData(), loadCitiAndMTATextData());
+    public HashMap<Integer, Boolean> filtersToShow() {
+        HashMap<Integer, Boolean> hashMap = new HashMap<>();
+        hashMap.put(AppConstants.InAppConstants.SHOW, true);
+        hashMap.put(AppConstants.InAppConstants.DISTANCE, true);
+        hashMap.put(AppConstants.InAppConstants.RATING, true);
+        hashMap.put(AppConstants.InAppConstants.PRICE, true);
+        hashMap.put(AppConstants.InAppConstants.CUISINE, true);
+        if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
 
-        } else if (selection == AppConstants.InAppConstants.CITI_LEFT) {
-            mRightDrawerRecyclerAdapter.changeDataSet(loadCitiAndMTASpinnerData(), loadCitiAndMTATextData());
-
+        } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT || mSelection == AppConstants.InAppConstants.MTA_LEFT) {
+            Log.d(TAG, "here in MTA");
+            hashMap.put(AppConstants.InAppConstants.DISTANCE, true);
+            hashMap.put(AppConstants.InAppConstants.PRICE, false);
+            hashMap.put(AppConstants.InAppConstants.RATING, false);
+            hashMap.put(AppConstants.InAppConstants.CUISINE, false);
+            hashMap.put(AppConstants.InAppConstants.SHOW, false);
         } else {
-             //restaurants stuff
+            hashMap.put(AppConstants.InAppConstants.SHOW, false);
         }
-    }
+        return hashMap;
 
-    public ArrayList<Integer> loadCitiAndMTASpinnerData() {
-        ArrayList<Integer> data = new ArrayList<>();
-        data.add(R.array.distance);
-        return data;
-    }
-
-    public ArrayList<String> loadCitiAndMTATextData() {
-        ArrayList<String> data = new ArrayList<>();
-        data.add(AppConstants.InAppConstants.DISTANCE_TEXT);
-        return data;
     }
 
 

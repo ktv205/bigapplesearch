@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.activities.MainActivity;
+import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.utils.leftdrawerutils.LeftDrawerItemDecoration;
 import com.example.krishnateja.bigapplesearch.utils.leftdrawerutils.LeftDrawerRecyclerAdapter;
 import com.example.krishnateja.bigapplesearch.utils.leftdrawerutils.RecyclerItemClickListener;
@@ -32,6 +33,7 @@ public class LeftDrawerFragment extends Fragment {
     LeftDrawerRecyclerAdapter mLeftDrawerRecyclerAdapter;
     private DrawerLayout mDrawerLayout;
     private MenuSection mMenuSection;
+    private int mSelection=0;
 
     public interface MenuSection {
         public void getMenuSelection(int selection);
@@ -46,6 +48,13 @@ public class LeftDrawerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(savedInstanceState!=null){
+            Log.d(TAG,"saved instance not null");
+            Log.d(TAG,savedInstanceState.getInt(AppConstants.BundleExtras.LEFT_SELECTED)+"<->");
+            mSelection=savedInstanceState.getInt(AppConstants.BundleExtras.LEFT_SELECTED);
+        }else{
+            Log.d(TAG,"saved instance is null");
+        }
         View view = inflater.inflate(R.layout.fragment_left_drawer, container, false);
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_left_drawer_recycle_view);
         recyclerView.setHasFixedSize(true);
@@ -53,31 +62,28 @@ public class LeftDrawerFragment extends Fragment {
         String[] headings = {"Near by", "Transport", "Subway", "City bikes", "Food", "Restaurants"};
         ArrayList<String> data = leftDrawerData(headings);
         HashMap<Integer, Integer> sections = leftDrawerSections(headings);
-        mLeftDrawerRecyclerAdapter = new LeftDrawerRecyclerAdapter(getActivity(), data, sections);
+        mLeftDrawerRecyclerAdapter = new LeftDrawerRecyclerAdapter(getActivity(), data, sections,mSelection);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mLeftDrawerRecyclerAdapter);
         recyclerView.addItemDecoration(new LeftDrawerItemDecoration(getActivity(), null));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
-                ColorDrawable viewColor = (ColorDrawable) view.getBackground();
-                int colorId = 0;
-                if (viewColor != null) {
-                    colorId = viewColor.getColor();
-                }
                 int selectedColorId = getActivity().getResources().getColor(R.color.selectColor);
-                if (colorId != selectedColorId) {
+                if(position!=mSelection && (position!=1 && position!=4)){
                     view.setBackgroundColor(selectedColorId);
                     mMenuSection.getMenuSelection(position);
+                    for(int i=0;i<recyclerView.getChildCount();i++){
+                        if (i != position) {
+                            recyclerView.getChildAt(i).setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+                        }
+                    }
+                    mSelection=position;
+                    Log.d(TAG, position + "<-position");
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
 
                 }
-                for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                    if (i != position) {
-                        recyclerView.getChildAt(i).setBackgroundColor(getActivity().getResources().getColor(R.color.white));
-                    }
-                }
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+
 
 
             }
@@ -89,6 +95,29 @@ public class LeftDrawerFragment extends Fragment {
         }));
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(AppConstants.BundleExtras.LEFT_SELECTED,mSelection);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
 
     public ArrayList<String> leftDrawerData(String[] headings) {
         ArrayList<String> list = new ArrayList<>();

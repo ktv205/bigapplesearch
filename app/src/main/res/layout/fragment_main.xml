@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/main_swipe_refresh"
+        android:id="@+id/fragment_main_swipe_refresh"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content">
 

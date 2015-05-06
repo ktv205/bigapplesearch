@@ -24,7 +24,16 @@ public class AppConstants {
         public static final String MTA = "mta_data_array_list";
         public static final String CITI = "citi_data_array_list";
         public static final String RES = "res_data_array_list";
+
     }
+
+    public static class BundleExtras{
+        public static final String LEFT_SELECTED="left_selected";
+        public static final String FILTERS_SELECTED="filters_selected";
+        public static final String MAIN_FRAGMENT="main_fragment";
+
+    }
+
 
     public static class InAppConstants {
         public static final String MTA = "MTA New York City Transit";

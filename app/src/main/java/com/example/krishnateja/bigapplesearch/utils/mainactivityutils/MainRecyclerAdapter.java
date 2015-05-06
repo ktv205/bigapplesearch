@@ -43,21 +43,37 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public MainRecyclerAdapter(Context context, ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
                                ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList, ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
         mContext = context;
-        mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
-        mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
-        mMTASize = mMTAMainScreenModelArrayList.size();
-        mCitiSize = mCitiBikeMainScreenModelArrayList.size();
-        mRestaurantMainScreenModelArrayList = restaurantMainScreenModelArrayList;
-        mResSize = mRestaurantMainScreenModelArrayList.size();
+        if (mtaMainScreenModelArrayList != null) {
+            mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
+            mMTASize = mMTAMainScreenModelArrayList.size();
+        } else {
+            mMTAMainScreenModelArrayList = new ArrayList<>();
+            mMTASize = 0;
+        }
+        if (citiBikeMainScreenModelArrayList != null) {
+            mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
+            mCitiSize = mCitiBikeMainScreenModelArrayList.size();
+        } else {
+            mCitiSize = 0;
+            mCitiBikeMainScreenModelArrayList = new ArrayList<>();
+        }
+        if (restaurantMainScreenModelArrayList != null) {
+            mRestaurantMainScreenModelArrayList = restaurantMainScreenModelArrayList;
+            mResSize = mRestaurantMainScreenModelArrayList.size();
+        } else {
+            mResSize = 0;
+            mRestaurantMainScreenModelArrayList = new ArrayList<>();
+        }
+
 
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         if (i == AppConstants.InAppConstants.MORE_CODE) {
-            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_load_more, viewGroup, false));
+            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_load_more, viewGroup, false), i);
         } else {
-            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_list, viewGroup, false));
+            return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_list, viewGroup, false), i);
         }
     }
 
@@ -104,19 +120,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.loadMoreLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "clicked on load more");
+                    // Log.d(TAG, "clicked on load more");
                 }
             });
 
         } else if (type == AppConstants.InAppConstants.RESTAURANT_CODE) {
             viewHolder.ratingBar.setVisibility(View.VISIBLE);
             viewHolder.priceTextView.setVisibility(View.VISIBLE);
-            Log.d(TAG, "fill res details");
+            // Log.d(TAG, "fill res details");
             viewHolder.headingTextView.setText(AppConstants.InAppConstants.RESTAURANTS);
             viewHolder.titleLinearLayout.setBackgroundColor(mContext.getResources().getColor(R.color.resBlue));
             viewHolder.nameTextView.setText(mRestaurantMainScreenModelArrayList.get(i - (mCitiSize + mMTASize)).getResName());
             viewHolder.distanceTextView.setText(CommonFunctions.setPrecision(mRestaurantMainScreenModelArrayList.get(i - (mCitiSize + mMTASize)).getDistance() / 1609.344) + " miles");
             ArrayList<String> cat = mRestaurantMainScreenModelArrayList.get(i - (mCitiSize + mMTASize)).getCategories();
+
+            viewHolder.directionsTextView.setTag(mRestaurantMainScreenModelArrayList.get(i - (mCitiSize + mMTASize)).getLat() + "," + mRestaurantMainScreenModelArrayList.get(i - (mCitiSize + mMTASize)).getLng());
             StringBuilder builder = new StringBuilder();
             for (int j = 0; j < cat.size(); j++) {
                 builder.append(cat.get(j) + ",");
@@ -132,7 +150,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.ratingBar.setRating((float) rating);
             ArrayList<String> violations = mRestaurantMainScreenModelArrayList.get(i - (mMTASize + mCitiSize)).getViolationCodes();
             builder = new StringBuilder();
-            if(violations!=null) {
+            if (violations != null) {
                 for (int j = 0; j < violations.size(); j++) {
                     builder.append(violations.get(j) + ",");
 
@@ -141,12 +159,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             if (builder.length() > 0) {
                 builder = builder.deleteCharAt(builder.length() - 1);
-                viewHolder.priceTextView.setText(builder.toString());
+                //viewHolder.priceTextView.setText(builder.toString());
+                viewHolder.priceTextView.setText("click here for violations");
             } else {
                 viewHolder.priceTextView.setText("no violations");
             }
-            viewHolder.websiteTextView.setText(mRestaurantMainScreenModelArrayList.get(i - (mMTASize + mCitiSize)).getUrl());
-            viewHolder.phoneTextView.setText(mRestaurantMainScreenModelArrayList.get(i-(mMTASize+mCitiSize)).getPhone());
+            String url = mRestaurantMainScreenModelArrayList.get(i - (mMTASize + mCitiSize)).getUrl().replace("http://www.", "");
+            viewHolder.websiteTextView.setText(url);
+            viewHolder.phoneTextView.setText(mRestaurantMainScreenModelArrayList.get(i - (mMTASize + mCitiSize)).getPhone());
 
 
         }
@@ -159,7 +179,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return mMTASize + mCitiSize + mMoreSize + mResSize;
+        return mMTASize + mCitiSize + mResSize;
     }
 
     @Override
@@ -210,7 +230,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         LinearLayout loadMoreLinearLayout;
 
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int type) {
             super(itemView);
             titleLinearLayout = (LinearLayout) itemView.findViewById(R.id.item_main_list_card_title_linear);
             iconDirectionImageView = (ImageView) itemView.findViewById(R.id.item_main_list_card_directions_icon);
@@ -235,26 +255,39 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             return AppConstants.InAppConstants.MTA_CODE;
         } else if (position < mMTASize + mCitiSize) {
             return AppConstants.InAppConstants.CITI_CODE;
-        } else if (mMoreSize == 1) {
-            return AppConstants.InAppConstants.MORE_CODE;
         } else {
             return AppConstants.InAppConstants.RESTAURANT_CODE;
         }
 
     }
 
-    public void changeDataSet(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
-                              ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList, boolean mtaMore) {
-        mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
-        mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
-        mMTASize = mMTAMainScreenModelArrayList.size();
-        mCitiSize = mCitiBikeMainScreenModelArrayList.size();
-        if (mtaMore) {
-            mMoreSize = 1;
+    public void dataSetChanged(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
+                               ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList, ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
+
+        if (mtaMainScreenModelArrayList != null) {
+            mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
+            mMTASize = mMTAMainScreenModelArrayList.size();
         } else {
-            mMoreSize = 0;
+            mMTAMainScreenModelArrayList = new ArrayList<>();
+            mMTASize = 0;
+        }
+        if (citiBikeMainScreenModelArrayList != null) {
+            mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
+            mCitiSize = mCitiBikeMainScreenModelArrayList.size();
+        } else {
+            mCitiSize = 0;
+            mCitiBikeMainScreenModelArrayList = new ArrayList<>();
+        }
+        if (restaurantMainScreenModelArrayList != null) {
+            mRestaurantMainScreenModelArrayList = restaurantMainScreenModelArrayList;
+            mResSize = mRestaurantMainScreenModelArrayList.size();
+        } else {
+            mResSize = 0;
+            mRestaurantMainScreenModelArrayList = new ArrayList<>();
         }
         notifyDataSetChanged();
 
     }
+
+
 }

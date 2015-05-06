@@ -119,7 +119,9 @@ public class CommonFunctions {
                 String.valueOf(lat));
         getVariables.put(AppConstants.ServerVariables.LNG,
                 String.valueOf(lng));
-        getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        if(offset>-1) {
+            getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        }
         return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
                 AppConstants.ServerVariables.FILE}, getVariables, context);
 
@@ -133,7 +135,9 @@ public class CommonFunctions {
                 String.valueOf(lat));
         getVariables.put(AppConstants.ServerVariables.LNG,
                 String.valueOf(lng));
-        getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        if(offset>-1) {
+            getVariables.put(AppConstants.ServerVariables.OFFSET, String.valueOf(offset));
+        }
         return CommonFunctions.buildParams(new String[]{AppConstants.ServerVariables.PATH,
                 AppConstants.ServerVariables.FILE}, getVariables, context);
 

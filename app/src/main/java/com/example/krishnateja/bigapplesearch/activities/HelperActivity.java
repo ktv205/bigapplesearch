@@ -120,9 +120,9 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
     public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
          mRestaurantMainScreenModelArrayList=restaurantMainScreenModelArrayList;
         if(mRestaurantMainScreenModelArrayList!=null){
-            Log.d(TAG,"mRestaurantMainScreenModelArrayList->"+mRestaurantMainScreenModelArrayList.size());
+           // Log.d(TAG,"mRestaurantMainScreenModelArrayList->"+mRestaurantMainScreenModelArrayList.size());
         }else{
-            Log.d(TAG,"mRestaurantMainScreenModelArrayList is null");
+           // Log.d(TAG,"mRestaurantMainScreenModelArrayList is null");
         }
         mFlag++;
         if(mFlag==DONE){
