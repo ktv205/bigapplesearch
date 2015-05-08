@@ -83,7 +83,6 @@ public class RightDrawerFragment extends Fragment {
         data.add(AppConstants.InAppConstants.DISTANCE_TEXT);
         data.add(AppConstants.InAppConstants.RATING_TEXT);
         data.add(AppConstants.InAppConstants.CUISINE_TEXT);
-        data.add(AppConstants.InAppConstants.PRICE_TEXT);
         return data;
     }
 
@@ -93,7 +92,6 @@ public class RightDrawerFragment extends Fragment {
         data.add(R.array.distance);
         data.add(R.array.rating);
         data.add(R.array.cuisine);
-        data.add(R.array.price);
         return data;
     }
 
@@ -109,14 +107,12 @@ public class RightDrawerFragment extends Fragment {
         hashMap.put(AppConstants.InAppConstants.SHOW, true);
         hashMap.put(AppConstants.InAppConstants.DISTANCE, true);
         hashMap.put(AppConstants.InAppConstants.RATING, true);
-        hashMap.put(AppConstants.InAppConstants.PRICE, true);
         hashMap.put(AppConstants.InAppConstants.CUISINE, true);
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
 
         } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT || mSelection == AppConstants.InAppConstants.MTA_LEFT) {
             Log.d(TAG, "here in MTA");
             hashMap.put(AppConstants.InAppConstants.DISTANCE, true);
-            hashMap.put(AppConstants.InAppConstants.PRICE, false);
             hashMap.put(AppConstants.InAppConstants.RATING, false);
             hashMap.put(AppConstants.InAppConstants.CUISINE, false);
             hashMap.put(AppConstants.InAppConstants.SHOW, false);

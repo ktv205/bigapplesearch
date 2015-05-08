@@ -58,7 +58,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     }
 
-    public interface ToMapFragment{
+    public interface ToMapFragment {
         public void sendDataToMapFragment(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
                                           ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList,
                                           ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList);
@@ -68,15 +68,18 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mMainFragmentInstance = (MainFragmentInstance) activity;
-        mToMapFragment=(ToMapFragment)activity;
+        mToMapFragment = (ToMapFragment) activity;
         mMainFragmentInstance.sendInstance(this);
-
 
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        boolean loadMore = false;
+        if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
+            loadMore = true;
+        }
         mView = inflater.inflate(R.layout.fragment_main, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.fragment_main_swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -89,18 +92,17 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.d(TAG, "mRestaurnat list not null size->" + mRestaurantMainScreenModelArrayList.size());
 
             }
+
             mMainRecyclerAdapter = new MainRecyclerAdapter(getActivity(), new ArrayList<MTAMainScreenModel>(),
-                    new ArrayList<CitiBikeMainScreenModel>(), new ArrayList<RestaurantMainScreenModel>());
+                    new ArrayList<CitiBikeMainScreenModel>(), new ArrayList<RestaurantMainScreenModel>(), loadMore);
 
         } else {
             mMainRecyclerAdapter = new MainRecyclerAdapter(getActivity(), mMTAMainScreenModelArrayList,
-                    mCitiBikeMainScreenModelArrayList, mRestaurantMainScreenModelArrayList);
+                    mCitiBikeMainScreenModelArrayList, mRestaurantMainScreenModelArrayList, loadMore);
         }
         RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.fragment_main_recycle_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mMainRecyclerAdapter);
-        mSwipeRefreshLayout.setRefreshing(true);
-
         if (savedInstanceState == null) {
             buildGoogleApiClient();
         } else {
@@ -171,6 +173,12 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void buildGoogleApiClient() {
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API).
                         addConnectionCallbacks(this)
@@ -199,9 +207,9 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mFlag++;
         mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
-            fillRecycleAdapter();
+            fillRecycleAdapter(false);
         } else {
-            fillRecycleAdapter();
+            fillRecycleAdapter(true);
 
         }
 
@@ -213,10 +221,10 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mCitiBikeMainScreenModelArrayList = citiBikeMainScreenModelArrayList;
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
             mSwipeRefreshLayout.setRefreshing(false);
-            fillRecycleAdapter();
+            fillRecycleAdapter(false);
         } else {
             mSwipeRefreshLayout.setRefreshing(false);
-            fillRecycleAdapter();
+            fillRecycleAdapter(false);
         }
 
     }
@@ -226,18 +234,18 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mFlag++;
         mRestaurantMainScreenModelArrayList = restaurantMainScreenModelArrayList;
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
-            fillRecycleAdapter();
+            fillRecycleAdapter(false);
         } else {
-            fillRecycleAdapter();
+            fillRecycleAdapter(false);
         }
 
     }
 
-    public void fillRecycleAdapter() {
+    public void fillRecycleAdapter(boolean loadMore) {
         mFlag = 0;
         mSwipeRefreshLayout.setRefreshing(false);
         mMainRecyclerAdapter.dataSetChanged(mMTAMainScreenModelArrayList,
-                mCitiBikeMainScreenModelArrayList, mRestaurantMainScreenModelArrayList);
+                mCitiBikeMainScreenModelArrayList, mRestaurantMainScreenModelArrayList, loadMore);
         mToMapFragment.sendDataToMapFragment(mMTAMainScreenModelArrayList,
                 mCitiBikeMainScreenModelArrayList, mRestaurantMainScreenModelArrayList);
     }
@@ -263,7 +271,9 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mSpinnerSelections = null;
         }
         mSpinnerSelections = new HashMap<>();
-        mSpinnerSelections.putAll(hashMap);
+        if (hashMap != null) {
+            mSpinnerSelections.putAll(hashMap);
+        }
         ArrayList<MTAMainScreenModel> localMtaMainScreenModelArrayList = new ArrayList<>();
         if (mMTAMainScreenModelArrayList != null) {
             localMtaMainScreenModelArrayList.addAll(mMTAMainScreenModelArrayList);
@@ -298,9 +308,47 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         Collections.reverse(localRestaurantMainScreenModelArrayList);
                     }
                 }
+                String query = null;
+                Log.d(TAG, entry.getKey());
+                if (entry.getKey().equals(AppConstants.InAppConstants.CUISINE_TEXT)) {
+                    Log.d(TAG, "inside cusine->" + entry.getValue());
+                    if (entry.getValue() == AppConstants.InAppConstants.CUISINE_AMERICAN) {
+                        query = "american";
+                    } else if (entry.getValue() == AppConstants.InAppConstants.CUISINE_INDIAN) {
+                        Log.d(TAG, "here in italian");
+                        query = "italian";
+                    } else if (entry.getValue() == AppConstants.InAppConstants.CUISINE_CHINESE) {
+                        query = "chin";
+                    }
+
+                    if (mRestaurantMainScreenModelArrayList != null && query != null) {
+                        localRestaurantMainScreenModelArrayList.clear();
+                        for (RestaurantMainScreenModel restaurantMainScreenModel : mRestaurantMainScreenModelArrayList) {
+                            if (restaurantMainScreenModel.getAddress().toLowerCase().contains(query.toLowerCase())) {
+                                localRestaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
+                            } else if (restaurantMainScreenModel.getResName().toLowerCase().contains(query.toLowerCase())) {
+                                localRestaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
+                            } else if (restaurantMainScreenModel.getUrl().toLowerCase().contains(query.toLowerCase())) {
+                                localRestaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
+                            } else {
+                                ArrayList<String> cats = restaurantMainScreenModel.getCategories();
+                                for (String cat : cats) {
+                                    if (cat.toLowerCase().contains(query.toLowerCase())) {
+                                        localRestaurantMainScreenModelArrayList.add(restaurantMainScreenModel);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
-        mMainRecyclerAdapter.dataSetChanged(localMtaMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList, localRestaurantMainScreenModelArrayList);
+        boolean loadMore = false;
+        if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
+            loadMore = true;
+        }
+        mMainRecyclerAdapter.dataSetChanged(localMtaMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList, localRestaurantMainScreenModelArrayList, loadMore);
         mToMapFragment.sendDataToMapFragment(localMtaMainScreenModelArrayList, localCitiBikeMainScreenModelArrayList, localRestaurantMainScreenModelArrayList);
     }
 

@@ -52,6 +52,7 @@ public class ServerJSONParser {
     public static final String RATING = "rating";
     public static final String URL = "url";
     public static final String VIOLATION = "violation_codes";
+    public static final String VIOLATION_SCORE="violation_score";
 
 
     public static ArrayList<MTAMainScreenModel> parseMTAMainScreenJSON(String jsonString) {
@@ -155,6 +156,7 @@ public class ServerJSONParser {
                     violation.add(violationJsonArray.getString(j));
 
                 }
+                restaurantMainScreenModel.setViolationScore(resultObject.getInt(VIOLATION_SCORE));
                 restaurantMainScreenModel.setCategories(cat);
                 restaurantMainScreenModel.setViolationCodes(violation);
                 restaurantMainScreenModel.setIsClosed(resultObject.getBoolean(CLOSED));

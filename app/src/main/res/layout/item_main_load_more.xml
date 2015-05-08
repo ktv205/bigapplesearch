@@ -3,12 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/item_main_load_more_linearlayout"
     android:layout_height="wrap_content"
-    android:background="@color/loadColor"
+    android:background="@color/white"
     android:gravity="center_horizontal">
-<TextView
-    android:layout_width="wrap_content"
+<Button
+    android:id="@+id/item_main_load_more_button"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="Click here to load more"
+    android:background="@color/loadColor"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:textColor="@color/white"/>
 

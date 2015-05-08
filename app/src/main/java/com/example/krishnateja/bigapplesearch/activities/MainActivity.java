@@ -2,7 +2,9 @@ package com.example.krishnateja.bigapplesearch.activities;
 
 import android.annotation.TargetApi;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,17 +15,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 
 import com.example.krishnateja.bigapplesearch.R;
 import com.example.krishnateja.bigapplesearch.fragment.MainFragment;
 import com.example.krishnateja.bigapplesearch.fragment.MapViewFragment;
+import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
@@ -82,12 +85,23 @@ public class MainActivity extends ActionBarActivity implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-        return true;
+        SearchView searchView=(SearchView)menu.findItem(R.id.search).getActionView();
+        ComponentName cn = new ComponentName(this, SearchActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+        searchView.setIconifiedByDefault(false);
+        return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        Log.d(TAG, "start activity");
+        //Log.d(TAG,"size of MTA data->"+mMainFragment.mMTAMainScreenModelArrayList.size()+"<-size()");
+        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMainFragment.mMTAMainScreenModelArrayList);
+        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mMainFragment.mCitiBikeMainScreenModelArrayList);
+        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.RES,mMainFragment.mRestaurantMainScreenModelArrayList);
+        super.startActivity(intent);
+
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -180,7 +194,7 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void getMapViewFragmentInstance(MapViewFragment mapViewFragment) {
-        Log.d(TAG,"getting mapviewfragment");
+        Log.d(TAG, "getting mapviewfragment");
         mMapViewFragment = mapViewFragment;
 
     }
@@ -190,8 +204,8 @@ public class MainActivity extends ActionBarActivity implements
         if (mMapViewFragment != null) {
             mMapViewFragment.getDataFromMain(mtaMainScreenModelArrayList,
                     citiBikeMainScreenModelArrayList, restaurantMainScreenModelArrayList);
-        }else{
-            Log.d(TAG,"mMapViewFragment is null");
+        } else {
+            Log.d(TAG, "mMapViewFragment is null");
         }
     }
 

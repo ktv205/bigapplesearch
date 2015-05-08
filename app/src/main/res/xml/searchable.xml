@@ -2,8 +2,6 @@
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
-    android:hint="@string/action_settings"
+    android:hint="@string/search_hint"
     android:textColorHint= "@color/textColorPrimary"
-    android:searchSuggestAuthority="com.example.krishnateja.bigapplesearch.data.RecentSearchContentProvider"
-    android:searchSuggestSelection=" ?"
     />  

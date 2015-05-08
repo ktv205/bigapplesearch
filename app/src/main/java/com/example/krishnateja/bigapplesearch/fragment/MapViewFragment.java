@@ -40,8 +40,11 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
 
     @Override
     public void onConnected(Bundle bundle) {
-        Location location = LocationServices.FusedLocationApi
-                .getLastLocation(mGoogleApiClient);
+        Location location=null;
+        if(mGoogleApiClient!=null) {
+           location = LocationServices.FusedLocationApi
+                    .getLastLocation(mGoogleApiClient);
+        }
         if(location!=null) {
             double lat = location.getLatitude();
             double lng = location.getLongitude();
@@ -53,6 +56,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
                             .title("you are here")
                             .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            mMarkers.add(marker);
         }
         mGoogleApiClient.disconnect();
         mGoogleApiClient=null;
@@ -77,7 +81,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mMapViewFragmentInstance = (MapViewFragmentInstance) activity;
-        mMapViewFragmentInstance.getMapViewFragmentInstance(this);
 
     }
 
@@ -99,6 +102,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         myMap = mapView.getMap();
+        mMapViewFragmentInstance.getMapViewFragmentInstance(this);
     }
 
     @Override
@@ -191,10 +195,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
     }
 
     public void removeMarkers() {
-        if (mMarkers.size() != 0) {
+        if (mMarkers!=null && mMarkers.size() != 0) {
             for (Marker marker : mMarkers) {
                 marker.remove();
             }
+        }else{
+            mMarkers=new ArrayList<>();
         }
     }
 }

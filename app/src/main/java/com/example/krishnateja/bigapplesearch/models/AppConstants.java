@@ -32,6 +32,8 @@ public class AppConstants {
         public static final String FILTERS_SELECTED="filters_selected";
         public static final String MAIN_FRAGMENT="main_fragment";
 
+        public static final String VIOLATION_CODES ="violation_codes" ;
+        public static final String VIOLATION_SCORE="violation_score";
     }
 
 
