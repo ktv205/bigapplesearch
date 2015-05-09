@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.fragment.LeftDrawerFragment;
 import com.example.krishnateja.bigapplesearch.fragment.RightDrawerFragment;
+import com.example.krishnateja.bigapplesearch.utils.mainactivityutils.MainRecyclerAdapter;
 import com.example.krishnateja.bigapplesearch.utils.rightdrawerutils.RightDrawerRecyclerAdapter;
 import com.example.krishnateja.bigapplesearch.utils.tabs.SlidingTabLayout;
 
@@ -72,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements
         SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.activity_main_sliding_tabs);
         tabs.setDistributeEvenly(true);
         tabs.setViewPager(pager);
+
     }
 
     @Override
@@ -95,10 +98,11 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void startActivity(Intent intent) {
         Log.d(TAG, "start activity");
-        //Log.d(TAG,"size of MTA data->"+mMainFragment.mMTAMainScreenModelArrayList.size()+"<-size()");
-        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMainFragment.mMTAMainScreenModelArrayList);
-        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mMainFragment.mCitiBikeMainScreenModelArrayList);
-        intent.putParcelableArrayListExtra(AppConstants.IntentExtras.RES,mMainFragment.mRestaurantMainScreenModelArrayList);
+        if(intent.hasExtra(SearchManager.QUERY)) {
+            intent.putParcelableArrayListExtra(AppConstants.IntentExtras.MTA, mMainFragment.mMTAMainScreenModelArrayList);
+            intent.putParcelableArrayListExtra(AppConstants.IntentExtras.CITI, mMainFragment.mCitiBikeMainScreenModelArrayList);
+            intent.putParcelableArrayListExtra(AppConstants.IntentExtras.RES, mMainFragment.mRestaurantMainScreenModelArrayList);
+        }
         super.startActivity(intent);
 
     }
@@ -208,6 +212,7 @@ public class MainActivity extends ActionBarActivity implements
             Log.d(TAG, "mMapViewFragment is null");
         }
     }
+
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 

@@ -47,15 +47,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private int mCitiSize;
     private int mResSize;
     private int mMoreSize = 0;
-    private boolean mLoadMore=false;
-    private int next=0;
+    private boolean mLoadMore = false;
+    private int next = 0;
+
 
     public MainRecyclerAdapter(Context context, ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
-                               ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList, ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList,boolean loadMore) {
+                               ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList, ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList, boolean loadMore) {
         mContext = context;
-        mLoadMore=loadMore;
-        if(mLoadMore){
-            mMoreSize=1;
+        mLoadMore = loadMore;
+        if (mLoadMore) {
+            mMoreSize = 1;
         }
         if (mtaMainScreenModelArrayList != null) {
             mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
@@ -85,7 +86,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         if (i == AppConstants.InAppConstants.MORE_CODE) {
-            Log.d(TAG,"onCreview holder more_code");
+            Log.d(TAG, "onCreview holder more_code");
             return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_load_more, viewGroup, false), i);
         } else {
             return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_main_list, viewGroup, false), i);
@@ -95,7 +96,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         int type = getItemViewType(i);
-        final int pos=i;
+        final int pos = i;
         if (type == AppConstants.InAppConstants.MTA_CODE) {
             MTAMainScreenModel mtaMainScreenModel = mMTAMainScreenModelArrayList.get(i);
             viewHolder.headingTextView.setText(AppConstants.InAppConstants.MTA);
@@ -175,14 +176,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 viewHolder.priceTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ViolationsDialogFragment violationsDialogFragment=new ViolationsDialogFragment();
-                        Bundle bundle=new Bundle();
+                        ViolationsDialogFragment violationsDialogFragment = new ViolationsDialogFragment();
+                        Bundle bundle = new Bundle();
                         bundle.putStringArrayList(AppConstants.BundleExtras.VIOLATION_CODES,
                                 mRestaurantMainScreenModelArrayList.get(pos - (mCitiSize + mMTASize)).getViolationCodes());
                         bundle.putInt(AppConstants.BundleExtras.VIOLATION_SCORE, mRestaurantMainScreenModelArrayList.get(pos - (mCitiSize + mMTASize)).getViolationScore());
                         ActionBarActivity activity = (ActionBarActivity) mContext;
                         violationsDialogFragment.setArguments(bundle);
-                        violationsDialogFragment.show(activity.getSupportFragmentManager(),"TAG");
+                        violationsDialogFragment.show(activity.getSupportFragmentManager(), "TAG");
 
                     }
                 });
@@ -204,7 +205,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return mMTASize + mCitiSize + mResSize+mMoreSize;
+        return mMTASize + mCitiSize + mResSize + mMoreSize;
     }
 
     @Override
@@ -221,7 +222,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         } else if (id == R.id.item_main_list_card_website_text) {
             if (textView != null) {
                 String url = "http://www." + textView.getText().toString();
-                Log.d(TAG,url);
+                Log.d(TAG, url);
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 mContext.startActivity(i);
@@ -242,8 +243,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     mContext.startActivity(intent);
                 }
             }
-        }else if(id==R.id.item_main_load_more_button){
-            Log.d(TAG,"laodMore");
+        } else if (id == R.id.item_main_load_more_button) {
+            Log.d(TAG, "laodMore");
 
 
         }
@@ -263,10 +264,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         public ViewHolder(View itemView, int type) {
             super(itemView);
-            if(type==AppConstants.InAppConstants.MORE_CODE){
-                Log.d(TAG,"more_code in view holder");
-                loadMore=(Button)itemView.findViewById(R.id.item_main_load_more_button);
-            }else {
+            if (type == AppConstants.InAppConstants.MORE_CODE) {
+                Log.d(TAG, "more_code in view holder");
+                loadMore = (Button) itemView.findViewById(R.id.item_main_load_more_button);
+            } else {
                 titleLinearLayout = (LinearLayout) itemView.findViewById(R.id.item_main_list_card_title_linear);
                 iconDirectionImageView = (ImageView) itemView.findViewById(R.id.item_main_list_card_directions_icon);
                 headingTextView = (TextView) itemView.findViewById(R.id.item_main_list_card_title_text);
@@ -288,9 +289,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getItemViewType(int position) {
         if (position < mMTASize) {
             return AppConstants.InAppConstants.MTA_CODE;
-        } else if(mLoadMore && mMoreSize==1){
+        } else if (mLoadMore && mMoreSize == 1) {
             return AppConstants.InAppConstants.MORE_CODE;
-        }else if (position < mMTASize + mCitiSize) {
+        } else if (position < mMTASize + mCitiSize) {
             return AppConstants.InAppConstants.CITI_CODE;
         } else {
             return AppConstants.InAppConstants.RESTAURANT_CODE;
@@ -300,12 +301,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void dataSetChanged(ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList,
                                ArrayList<CitiBikeMainScreenModel> citiBikeMainScreenModelArrayList,
-                               ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList,boolean loadMore) {
-        mLoadMore=loadMore;
-        if(mLoadMore){
-            mMoreSize=1;
-        }else{
-            mMoreSize=0;
+                               ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList, boolean loadMore) {
+        mLoadMore = loadMore;
+        if (mLoadMore) {
+            mMoreSize = 1;
+        } else {
+            mMoreSize = 0;
         }
         if (mtaMainScreenModelArrayList != null) {
             mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
@@ -332,7 +333,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     }
 
-    public class MoreAsyncTask extends AsyncTask<RequestParams,Void,String>{
+    public class MoreAsyncTask extends AsyncTask<RequestParams, Void, String> {
 
         @Override
         protected String doInBackground(RequestParams... params) {

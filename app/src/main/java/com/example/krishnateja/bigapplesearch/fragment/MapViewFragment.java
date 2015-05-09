@@ -58,7 +58,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.OnConne
                                     .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMarkers.add(marker);
         }
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient!=null) {
+            mGoogleApiClient.disconnect();
+        }
         mGoogleApiClient=null;
 
     }
