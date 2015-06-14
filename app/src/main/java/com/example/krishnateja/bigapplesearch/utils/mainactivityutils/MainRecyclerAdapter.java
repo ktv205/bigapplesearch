@@ -19,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.krishnateja.bigapplesearch.R;
+import com.example.krishnateja.bigapplesearch.activities.MTAActivity;
 import com.example.krishnateja.bigapplesearch.activities.MainActivity;
 import com.example.krishnateja.bigapplesearch.fragment.ViolationsDialogFragment;
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
@@ -119,7 +120,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.websiteTextView.setText(AppConstants.InAppConstants.MTAURL);
             viewHolder.phoneTextView.setText(AppConstants.InAppConstants.MTAPHONE);
             viewHolder.directionsTextView.setTag(mtaMainScreenModel.getStopLatitude() + "," + mtaMainScreenModel.getStopLongitude());
-
+            viewHolder.titleLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(mContext, MTAActivity.class);
+                    intent.putExtra(AppConstants.IntentExtras.MTA,mMTAMainScreenModelArrayList.get(pos));
+                    mContext.startActivity(intent);
+                }
+            });
 
         } else if (type == AppConstants.InAppConstants.CITI_CODE) {
             CitiBikeMainScreenModel citiBikeMainScreenModel = mCitiBikeMainScreenModelArrayList.get(i - mMTASize);
@@ -201,6 +209,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             viewHolder.websiteTextView.setOnClickListener(this);
             viewHolder.directionsTextView.setOnClickListener(this);
         }
+
     }
 
     @Override
@@ -245,9 +254,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
         } else if (id == R.id.item_main_load_more_button) {
             Log.d(TAG, "laodMore");
-
-
         }
+
 
     }
 

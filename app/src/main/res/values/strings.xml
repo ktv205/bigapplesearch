@@ -38,4 +38,13 @@
         <item>Citi Bikes</item>
         <item>Restaurants</item>
     </string-array>
+    <string name="title_activity_mta">MTAActivity</string>
+    <string name="alerts_title">subway alert</string>
+    <string name="alerts_label">Subway Alerts</string>
+    <string name="find_route">Find Route</string>
+    <string name="service_not_available">service not available</string>
+    <string name="invalid_lat_long_used">invalid lat long used</string>
+    <string name="no_address_found">no address found</string>
+    <string name="address_found">address found</string>
+    <string name="alters">Alerts</string>
 </resources>

@@ -41,6 +41,7 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         ScreenSlidePagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);

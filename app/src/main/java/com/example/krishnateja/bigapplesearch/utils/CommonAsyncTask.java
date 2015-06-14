@@ -2,12 +2,14 @@ package com.example.krishnateja.bigapplesearch.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
 import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.SubwayAlertsModel;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,9 @@ public class CommonAsyncTask extends AsyncTask<RequestParams, Void, String> {
 
         public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList);
 
+        public void getAlertsData(ArrayList<SubwayAlertsModel> subwayAlertsModelArrayList);
 
+        //public void getFindRouteData(ArrayList<Object> someObject);
     }
 
     private Context mContext;
@@ -66,6 +70,15 @@ public class CommonAsyncTask extends AsyncTask<RequestParams, Void, String> {
             }else if(mCode==AppConstants.InAppConstants.RESTAURANT_CODE){
                 ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList=ServerJSONParser.parseRestaurantMainScreen(s);
                 mServerData.getResData(restaurantMainScreenModelArrayList);
+            }else if(mCode==AppConstants.InAppConstants.MTA_ACTIVITY_CODE){
+                ArrayList<MTAMainScreenModel> mtaMainScreenModelArrayList=ServerJSONParser.parseMTAActivityData(s);
+                mServerData.getMTAData(mtaMainScreenModelArrayList);
+            }else if(mCode==AppConstants.InAppConstants.ALERTS_CODE){
+                ArrayList<SubwayAlertsModel> subwayAlertsModelArrayList=ServerJSONParser.parseAlerts(s);
+                mServerData.getAlertsData(subwayAlertsModelArrayList);
+            }else if(mCode==AppConstants.InAppConstants.FIND_ROUTE_CODE){
+                Log.d(TAG, "hrere in find_route_code");
+                //DoSomething here
             }
 
 

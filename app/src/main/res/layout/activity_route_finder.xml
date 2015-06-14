@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/colorPrimaryDark"/>
+    <include
+        android:id="@+id/activity_route_finder_toolbar"
+        layout="@layout/toolbar"></include>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/from_current_location_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/currentlocation"/>
+    <AutoCompleteTextView
+        android:id="@+id/from_auto_complete_text"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+    <ImageButton
+        android:id="@+id/from_cancel_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cancel"/>
+</LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/to_current_location_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/currentlocation"/>
+    <AutoCompleteTextView
+        android:id="@+id/to_auto_complete_text"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/to_cancel_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cancel"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/find_route_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="find route"/>
+
+</LinearLayout>

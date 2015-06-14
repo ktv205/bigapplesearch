@@ -1,0 +1,49 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mta_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.krishnateja.bigapplesearch.activities.MTAActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <include
+            android:id="@+id/mta_toolbar"
+            layout="@layout/toolbar"></include>
+
+        <fragment
+            android:id="@+id/activity_mta_map"
+            class="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/activity_mta_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/activity_mta_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+    <fragment
+        android:id="@+id/mta_right_drawer_fragment"
+        android:name="com.example.krishnateja.bigapplesearch.fragment.RightMTADrawerFragment"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        tools:layout="@layout/fragment_right_mta_drawer"></fragment>
+</android.support.v4.widget.DrawerLayout>

@@ -76,6 +76,7 @@ public class LeftDrawerFragment extends Fragment {
                     for(int i=0;i<recyclerView.getChildCount();i++){
                         if (i != position) {
                             recyclerView.getChildAt(i).setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+
                         }
                     }
                     mSelection=position;

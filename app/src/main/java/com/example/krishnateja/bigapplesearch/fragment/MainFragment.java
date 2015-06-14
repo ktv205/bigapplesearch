@@ -45,7 +45,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public ArrayList<MTAMainScreenModel> mMTAMainScreenModelArrayList;
     public ArrayList<CitiBikeMainScreenModel> mCitiBikeMainScreenModelArrayList;
     public ArrayList<RestaurantMainScreenModel> mRestaurantMainScreenModelArrayList;
-    private static int DONE = 3;
+    private static int DONE = 2;
     private int mFlag = 0;
     private MainRecyclerAdapter mMainRecyclerAdapter;
     private MainFragmentInstance mMainFragmentInstance;
@@ -144,13 +144,13 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
             callMTAAsyncTask(lat, lng, -1);
             callCITIAsyncTask(lat, lng, -1);
-            callResAsyncTask(lat, lng, -1);
+            //callResAsyncTask(lat, lng, -1);
         } else if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
             callMTAAsyncTask(lat, lng, 0);
         } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT) {
             callCITIAsyncTask(lat, lng, 0);
         } else {
-            callResAsyncTask(lat, lng, 0);
+            //callResAsyncTask(lat, lng, 0);
         }
 
 

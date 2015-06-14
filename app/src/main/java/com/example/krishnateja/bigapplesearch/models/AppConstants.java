@@ -6,8 +6,8 @@ package com.example.krishnateja.bigapplesearch.models;
 public class AppConstants {
     public static class ServerVariables {
         public static final String SCHEME = "http";
-        public static final String AUTHORITY = "52.4.108.84";
-        public static final String PATH = "bigapple";
+        public static final String AUTHORITY = "default-environment-qr22mazurf.elasticbeanstalk.com";
+        public static final String PATH = "NYCSubwayAndBike";
         public static final String FILE = "bigapple.php";
         public static final String METHOD = "GET";
         public static final String GETMTAVARIABLE = "MTA";
@@ -17,6 +17,10 @@ public class AppConstants {
         public static final String OFFSET = "offset";
         public static final String RES_AUTHORITY="52.5.187.1";
         public static final String LOCATION_PATH="location";
+        public static final String ALERTS_FILE="mta_alerts.php";
+        public static final String FIND_ROUTE_FILE="find_route.php";
+        public static final String TO_ADD_GET_VARIABLE="to";
+        public static final String FROM_ADD_GET_VARIABLE="from";
 
     }
 
@@ -24,7 +28,8 @@ public class AppConstants {
         public static final String MTA = "mta_data_array_list";
         public static final String CITI = "citi_data_array_list";
         public static final String RES = "res_data_array_list";
-
+        public static final String MTA_STOPS="mta_stop_ids";
+        public static final String MTA_ROUTES="mta_routes_id";
     }
 
     public static class BundleExtras{
@@ -34,6 +39,8 @@ public class AppConstants {
 
         public static final String VIOLATION_CODES ="violation_codes" ;
         public static final String VIOLATION_SCORE="violation_score";
+        public static final String FROM_ADDRESS = "from_address";
+        public static final String TO_ADDRESS = "to_address";
     }
 
 
@@ -49,6 +56,7 @@ public class AppConstants {
         public static final int MTA_CODE = 1;
         public static final int CITI_CODE = 2;
         public static final int RESTAURANT_CODE = 3;
+        public static final int MTA_ACTIVITY_CODE=4;
         public static final int SHOW_ALL = 0;
         public static final int SHOW_MTA = 1;
         public static final int SHOW_CITI = 2;
@@ -84,7 +92,19 @@ public class AppConstants {
         public static final String RATING_TEXT = "Rating";
         public static final String PRICE_TEXT = "Price";
         public static final String CUISINE_TEXT = "Cuisine";
+        public static final int ALERTS_CODE = 5;
+        public static final int FIND_ROUTE_CODE =6 ;
+    }
 
-
+    public final class Constants {
+        public static final int SUCCESS_RESULT = 0;
+        public static final int FAILURE_RESULT = 1;
+        public static final String PACKAGE_NAME =
+                "com.google.android.gms.location.sample.locationaddress";
+        public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+        public static final String RESULT_DATA_KEY = PACKAGE_NAME +
+                ".RESULT_DATA_KEY";
+        public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
+                ".LOCATION_DATA_EXTRA";
     }
 }

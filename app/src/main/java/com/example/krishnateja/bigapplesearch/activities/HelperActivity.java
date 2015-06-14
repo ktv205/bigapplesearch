@@ -14,6 +14,7 @@ import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RequestParams;
 import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.SubwayAlertsModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.utils.CommonFunctions;
 import com.google.android.gms.common.ConnectionResult;
@@ -129,6 +130,11 @@ public class HelperActivity extends ActionBarActivity implements CommonAsyncTask
             sendUserToMainScreen();
             mFlag=0;
         }
+
+    }
+
+    @Override
+    public void getAlertsData(ArrayList<SubwayAlertsModel> subwayAlertsModelArrayList) {
 
     }
 

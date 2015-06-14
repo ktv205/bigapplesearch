@@ -31,6 +31,7 @@ import com.example.krishnateja.bigapplesearch.models.AppConstants;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.SubwayAlertsModel;
 import com.example.krishnateja.bigapplesearch.utils.CommonAsyncTask;
 import com.example.krishnateja.bigapplesearch.fragment.LeftDrawerFragment;
 import com.example.krishnateja.bigapplesearch.fragment.RightDrawerFragment;
@@ -74,8 +75,10 @@ public class MainActivity extends ActionBarActivity implements
         SlidingTabLayout tabs = (SlidingTabLayout) findViewById(R.id.activity_main_sliding_tabs);
         tabs.setDistributeEvenly(true);
         tabs.setViewPager(pager);
+        getSupportActionBar().setTitle("NearBy");
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -115,6 +118,10 @@ public class MainActivity extends ActionBarActivity implements
             openOrClose(START_FLAG);
         } else if (id == R.id.action_right_nav) {
             openOrClose(END_FLAG);
+        }else if(id==R.id.alerts){
+            startActivity(new Intent(this,AlertsActivity.class));
+        }else if(id==R.id.action_find_route){
+            startActivity(new Intent(this,RouteFinderActivity.class));
         }
         return true;
     }
@@ -183,6 +190,11 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void getResData(ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList) {
         mMainFragment.getResData(restaurantMainScreenModelArrayList);
+    }
+
+    @Override
+    public void getAlertsData(ArrayList<SubwayAlertsModel> subwayAlertsModelArrayList) {
+
     }
 
     @Override

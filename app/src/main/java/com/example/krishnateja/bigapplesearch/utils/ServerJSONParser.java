@@ -5,11 +5,13 @@ import android.util.Log;
 import com.example.krishnateja.bigapplesearch.models.CitiBikeMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.MTAMainScreenModel;
 import com.example.krishnateja.bigapplesearch.models.RestaurantMainScreenModel;
+import com.example.krishnateja.bigapplesearch.models.SubwayAlertsModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -52,7 +54,19 @@ public class ServerJSONParser {
     public static final String RATING = "rating";
     public static final String URL = "url";
     public static final String VIOLATION = "violation_codes";
-    public static final String VIOLATION_SCORE="violation_score";
+    public static final String VIOLATION_SCORE = "violation_score";
+    public static final String DIRECTION_ID = "direction_id";
+    public static final String ROUTE_LONG_NAME = "route_long_name";
+    public static final String ROUTE_SHORT_NAME = "route_short_name";
+    public static final String ROUTE_TEXT_COLOR = "route_text_color";
+    public static final String ROUTE_DESC = "route_desc";
+    public static final String TRIP_HEADSIGN = "trip_headsign";
+    public static final String ARRIVAL_TIME = "arrival_time";
+    public static final String LINE_NAME = "line";
+    public static final String LINE_STATUS = "status";
+    public static final String LINE_TEXT = "text";
+    public static final String LINE_DATE = "date";
+    public static final String LINE_TIME = "time";
 
 
     public static ArrayList<MTAMainScreenModel> parseMTAMainScreenJSON(String jsonString) {
@@ -65,7 +79,12 @@ public class ServerJSONParser {
                 JSONObject stopsObject = mainArray.getJSONObject(i);
                 MTAMainScreenModel mtaMainScreenModel = new MTAMainScreenModel();
                 mtaMainScreenModel.setDistance(stopsObject.getDouble(DISTANCE));
-                mtaMainScreenModel.setStopId(stopsObject.getString(STOP_ID));
+                ArrayList<String> stopIds = new ArrayList<>();
+                JSONArray stopIdArray = stopsObject.getJSONArray(STOP_ID);
+                for (int j = 0; j < stopIdArray.length(); j++) {
+                    stopIds.add(stopIdArray.getJSONObject(j).getString(STOP_ID));
+                }
+                mtaMainScreenModel.setStopId(stopIds);
                 mtaMainScreenModel.setStopLatitude(stopsObject.getDouble(STOP_LAT));
                 mtaMainScreenModel.setStopLongitude(stopsObject.getDouble(STOP_LON));
                 mtaMainScreenModel.setStopName(stopsObject.getString(STOP_NAME));
@@ -140,7 +159,7 @@ public class ServerJSONParser {
                 }
                 restaurantMainScreenModel.setCategories(cat);
                 restaurantMainScreenModel.setPhone(resultObject.getString(DISPLAY_PHONE));
-                JSONObject locationObject=resultObject.getJSONObject(LOCATION);
+                JSONObject locationObject = resultObject.getJSONObject(LOCATION);
                 restaurantMainScreenModel.setAddress(locationObject.getJSONArray(DISPLAY_ADDRESS).get(0).toString());
 
                 JSONObject coordObject = locationObject.getJSONObject(COORDINATE);
@@ -169,6 +188,56 @@ public class ServerJSONParser {
             e.printStackTrace();
             return null;
         }
+
+
+    }
+
+    public static ArrayList<MTAMainScreenModel> parseMTAActivityData(String s) {
+        ArrayList<MTAMainScreenModel> arrayList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(s);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                MTAMainScreenModel mtaMainScreenModel = new MTAMainScreenModel();
+                mtaMainScreenModel.setOneArrivalTime(jsonObject.getString(ARRIVAL_TIME));
+                mtaMainScreenModel.setOneRouteColor(jsonObject.getString(ROUTE_COLOR));
+                mtaMainScreenModel.setOneStopName(jsonObject.getString(STOP_NAME));
+                mtaMainScreenModel.setOneRouteDesc(jsonObject.getString(ROUTE_DESC));
+                mtaMainScreenModel.setOneRouteLongName(jsonObject.getString(ROUTE_LONG_NAME));
+                mtaMainScreenModel.setOneRouteShortName(jsonObject.getString(ROUTE_SHORT_NAME));
+                mtaMainScreenModel.setOneRouteTextColor(jsonObject.getString(ROUTE_TEXT_COLOR));
+                mtaMainScreenModel.setOneStopId(jsonObject.getString(STOP_ID));
+                mtaMainScreenModel.setOneTripHeadSign(jsonObject.getString(TRIP_HEADSIGN));
+                arrayList.add(mtaMainScreenModel);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return arrayList;
+    }
+
+    public static ArrayList<SubwayAlertsModel> parseAlerts(String s) {
+        ArrayList<SubwayAlertsModel> arrayList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(s);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                SubwayAlertsModel subwayAlertsModel = new SubwayAlertsModel();
+                subwayAlertsModel.setLineName(object.getString(LINE_NAME));
+                subwayAlertsModel.setLineText(object.getString(LINE_TEXT));
+                subwayAlertsModel.setLineDate(object.getString(LINE_DATE));
+                subwayAlertsModel.setLineStatus(object.getString(LINE_STATUS));
+                subwayAlertsModel.setLineTime(object.getString(LINE_TIME));
+                arrayList.add(subwayAlertsModel);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return arrayList;
 
 
     }

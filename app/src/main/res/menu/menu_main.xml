@@ -6,8 +6,17 @@
         android:icon="@drawable/ic_action_search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
+    <item android:id="@+id/alerts"
+        android:title="@string/alerts_title"
+        android:icon="@drawable/sign_warning"
+        app:showAsAction="collapseActionView|ifRoom"
+        ></item>
     <item android:id="@+id/action_right_nav"
         android:icon="@drawable/ic_action_filter_100"
         app:showAsAction="always"
         android:title="@string/app_name"></item>
+    <item android:id="@+id/action_find_route"
+         android:title="find route"
+        android:icon="@drawable/route"
+        app:showAsAction="ifRoom"></item>
 </menu>
