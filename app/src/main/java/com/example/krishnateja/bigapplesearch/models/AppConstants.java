@@ -6,7 +6,7 @@ package com.example.krishnateja.bigapplesearch.models;
 public class AppConstants {
     public static class ServerVariables {
         public static final String SCHEME = "http";
-        public static final String AUTHORITY = "default-environment-qr22mazurf.elasticbeanstalk.com";
+        public static final String AUTHORITY = "52.25.215.16";
         public static final String PATH = "NYCSubwayAndBike";
         public static final String FILE = "bigapple.php";
         public static final String METHOD = "GET";

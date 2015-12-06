@@ -60,7 +60,7 @@ public class CommonFunctions {
         RequestParams params = new RequestParams();
         Uri.Builder url = new Uri.Builder();
         url.scheme(AppConstants.ServerVariables.SCHEME)
-                .authority(AppConstants.ServerVariables.RES_AUTHORITY).build();
+                .authority(AppConstants.ServerVariables.AUTHORITY).build();
         url.appendPath(path[0]);
         url.appendPath(path[1]);
         if (getVariables != null) {

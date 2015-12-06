@@ -255,6 +255,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         } else if (id == R.id.item_main_load_more_button) {
             Log.d(TAG, "laodMore");
             mLoadMore=true;
+
+
         }
 
 
@@ -313,13 +315,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                                ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList, boolean loadMore) {
         mLoadMore = loadMore;
         if (mLoadMore) {
-            mMoreSize = mMoreSize+1;
+            mMoreSize = mMoreSize+30;
         } else {
             mMoreSize = 0;
         }
         if (mtaMainScreenModelArrayList != null) {
-            mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
-            mMTASize = mMTAMainScreenModelArrayList.size();
+            if(mMoreSize>0){
+                mMTAMainScreenModelArrayList.addAll(mtaMainScreenModelArrayList);
+                mMTAMainScreenModelArrayList.size();
+            }else {
+                mMTAMainScreenModelArrayList = mtaMainScreenModelArrayList;
+                mMTASize = mMTAMainScreenModelArrayList.size();
+            }
         } else {
             mMTAMainScreenModelArrayList = new ArrayList<>();
             mMTASize = 0;
@@ -346,6 +353,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         protected String doInBackground(RequestParams... params) {
+
             return null;
         }
 
