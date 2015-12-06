@@ -254,6 +254,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
         } else if (id == R.id.item_main_load_more_button) {
             Log.d(TAG, "laodMore");
+            mLoadMore=true;
         }
 
 
@@ -312,7 +313,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                                ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList, boolean loadMore) {
         mLoadMore = loadMore;
         if (mLoadMore) {
-            mMoreSize = 1;
+            mMoreSize = mMoreSize+1;
         } else {
             mMoreSize = 0;
         }

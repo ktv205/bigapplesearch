@@ -15,7 +15,7 @@ public class AppConstants {
         public static final String LAT = "lat";
         public static final String LNG = "lng";
         public static final String OFFSET = "offset";
-        public static final String RES_AUTHORITY="52.5.187.1";
+        public static final String RES_AUTHORITY="52.25.215.16";
         public static final String LOCATION_PATH="location";
         public static final String ALERTS_FILE="mta_alerts.php";
         public static final String FIND_ROUTE_FILE="find_route.php";
