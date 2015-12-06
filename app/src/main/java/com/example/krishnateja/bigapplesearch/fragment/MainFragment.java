@@ -144,13 +144,13 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (mSelection == AppConstants.InAppConstants.NEARBY_LEFT) {
             callMTAAsyncTask(lat, lng, -1);
             callCITIAsyncTask(lat, lng, -1);
-            //callResAsyncTask(lat, lng, -1);
+            callResAsyncTask(lat, lng, -1);
         } else if (mSelection == AppConstants.InAppConstants.MTA_LEFT) {
             callMTAAsyncTask(lat, lng, 0);
         } else if (mSelection == AppConstants.InAppConstants.CITI_LEFT) {
             callCITIAsyncTask(lat, lng, 0);
         } else {
-            //callResAsyncTask(lat, lng, 0);
+            callResAsyncTask(lat, lng, 0);
         }
 
 

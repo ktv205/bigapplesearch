@@ -315,7 +315,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                                ArrayList<RestaurantMainScreenModel> restaurantMainScreenModelArrayList, boolean loadMore) {
         mLoadMore = loadMore;
         if (mLoadMore) {
-            mMoreSize = mMoreSize+30;
+            mMoreSize = 1;
         } else {
             mMoreSize = 0;
         }
